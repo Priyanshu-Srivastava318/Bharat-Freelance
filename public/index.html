@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bharat Freelance - India's Premier Freelancing Platform</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+ tailwind.config = { 
+   theme: { 
+     extend: { 
+       colors: { 
+         saffron: "#FF9933",
+         brand: "#1dbf73",
+         navy: "#000080"
+       } 
+     } 
+   } 
+ }
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+  
+  * {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .hero-gradient {
+    background: linear-gradient(135deg, #fff5e6 0%, #e8f5e9 100%);
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  .fade-in {
+    animation: fadeIn 1s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .feature-card {
+    transition: all 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  }
+  
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #FF9933, #1dbf73);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
+
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+<!-- 🎯 Header/Navbar -->
+<header class="w-full flex justify-between items-center px-6 md:px-10 py-5 glass-effect shadow-lg fixed top-0 z-50">
+    
+   <a href="index.html" class="text-2xl md:text-3xl font-extrabold cursor-pointer hover:opacity-80 transition">
+  <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+</a>
+
+    <nav class="hidden md:block">
+        <ul class="flex gap-8 text-[17px] font-medium">
+            <li><a href="index.html" class="hover:text-brand transition">Home</a></li>
+            <li><a href="postjob.html" class="hover:text-saffron transition">Hire Talent</a></li>
+            <li><a href="ats.html" class="hover:text-brand transition">Find Work</a></li>
+            <li><a href="about.html" class="hover:text-saffron transition">About</a></li>
+            <li><a href="contact.html" class="hover:text-brand transition">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="flex gap-3">
+        <a href="login.html" class="px-6 py-2.5 border-2 border-brand text-brand rounded-lg hover:bg-brand hover:text-white transition font-semibold">Login</a>
+        <a href="signup.html" class="px-6 py-2.5 bg-gradient-to-r from-saffron to-brand text-white rounded-lg hover:shadow-lg transition font-semibold">Sign Up</a>
+    </div>
+
+</header>
+
+<!-- 🚀 Hero Section -->
+<section class="hero-gradient text-center pt-32 pb-20 px-4 mt-16 fade-in">
+
+    <div class="max-w-5xl mx-auto">
+        
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6">
+            <span class="text-2xl">🇮🇳</span>
+            <span class="text-sm font-semibold text-gray-700">Made in India, For India</span>
+        </div>
+
+        <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+            Work Without Borders.<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-saffron to-brand">
+                Hire Without Limits.
+            </span>
+        </h1>
+
+        <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            India's first <span class="font-bold text-brand">AI-powered</span> freelancing marketplace with 
+            <span class="font-bold text-saffron">secure payments</span> and <span class="font-bold">instant matching</span>.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="postjob.html" class="bg-gradient-to-r from-saffron to-orange-500 text-white px-10 py-4 text-xl rounded-lg hover:shadow-2xl transition font-bold transform hover:scale-105">
+                🎯 Hire Talent
+            </a>
+
+            <a href="apply.html" class="border-2 border-brand text-brand px-10 py-4 rounded-lg text-xl hover:bg-brand hover:text-white transition font-bold transform hover:scale-105">
+                💼 Find Work
+            </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="flex flex-wrap justify-center gap-8 mt-16 text-sm text-gray-600">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">✅</span>
+                <span>Secure Payments</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🤖</span>
+                <span>AI Matching</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">⚡</span>
+                <span>Instant Hiring</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🔒</span>
+                <span>Data Protected</span>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- 📊 Stats Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            
+            <div class="fade-in">
+                <div class="stat-number">10K+</div>
+                <p class="text-gray-600 font-semibold mt-2">Active Freelancers</p>
+            </div>
+
+            <div class="fade-in" style="animation-delay: 0.1s;">
+                <div class="stat-number">5K+</div>
+                <p class="text-gray-600 font-semibold mt-2">Projects Completed</p>
+            </div>
+
+            <div class="fade-in" style="animation-delay: 0.2s;">
+                <div class="stat-number">₹50L+</div>
+                <p class="text-gray-600 font-semibold mt-2">Paid to Freelancers</p>
+            </div>
+
+            <div class="fade-in" style="animation-delay: 0.3s;">
+                <div class="stat-number">98%</div>
+                <p class="text-gray-600 font-semibold mt-2">Client Satisfaction</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- 🎨 Features Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4">
+        
+        <h2 class="text-4xl font-bold text-center mb-4">
+            Why Choose <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>?
+        </h2>
+        <p class="text-center text-gray-600 mb-12 text-lg">
+            India's most trusted platform for freelancers and employers
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Feature 1 -->
+            <div class="feature-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-5xl mb-4">🤖</div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-800">AI-Powered Matching</h3>
+                <p class="text-gray-600">
+                    Our smart algorithm matches you with the perfect freelancers or jobs based on skills, experience, and requirements.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-5xl mb-4">💳</div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-800">Secure Payments</h3>
+                <p class="text-gray-600">
+                    Integrated with Razorpay for UPI, cards, and wallet payments. Money held in escrow until work is approved.
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-5xl mb-4">📄</div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-800">ATS Resume Scoring</h3>
+                <p class="text-gray-600">
+                    Upload your resume and get instant AI-powered feedback on how well it matches job requirements.
+                </p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-5xl mb-4">🇮🇳</div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-800">India-First Platform</h3>
+                <p class="text-gray-600">
+                    Built for Indian freelancers with regional language support, Indian payment methods, and local pricing.
+                </p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="feature-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-5xl mb-4">⚡</div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-800">Lightning Fast</h3>
+                <p class="text-gray-600">
+                    Post a job and start receiving proposals within minutes. Hire talent in less than 24 hours.
+                </p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="feature-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-5xl mb-4">🔒</div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-800">100% Data Security</h3>
+                <p class="text-gray-600">
+                    Your data is encrypted and protected. We never share your information with third parties.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- 💼 Categories Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+        
+        <h2 class="text-4xl font-bold text-center mb-4">
+            Popular Categories
+        </h2>
+        <p class="text-center text-gray-600 mb-12 text-lg">
+            Find work or hire talent across multiple categories
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">💻</div>
+                <h4 class="font-bold text-gray-800">Web Development</h4>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">🎨</div>
+                <h4 class="font-bold text-gray-800">Graphic Design</h4>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">✍️</div>
+                <h4 class="font-bold text-gray-800">Content Writing</h4>
+            </div>
+
+            <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">🎬</div>
+                <h4 class="font-bold text-gray-800">Video Editing</h4>
+            </div>
+
+            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">📱</div>
+                <h4 class="font-bold text-gray-800">Mobile Apps</h4>
+            </div>
+
+            <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">📊</div>
+                <h4 class="font-bold text-gray-800">Digital Marketing</h4>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">📈</div>
+                <h4 class="font-bold text-gray-800">Data Analysis</h4>
+            </div>
+
+            <div class="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-xl text-center hover:shadow-lg transition cursor-pointer">
+                <div class="text-4xl mb-3">🎤</div>
+                <h4 class="font-bold text-gray-800">Voice Over</h4>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- 🎯 CTA Section -->
+<section class="py-20 bg-gradient-to-r from-saffron via-orange-400 to-brand text-white">
+    <div class="max-w-4xl mx-auto text-center px-4">
+        
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Get Started?
+        </h2>
+        
+        <p class="text-xl mb-10 opacity-90">
+            Join thousands of freelancers and employers already using Bharat Freelance
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="signup.html" class="bg-white text-saffron px-10 py-4 text-xl rounded-lg hover:shadow-2xl transition font-bold transform hover:scale-105">
+                Join as Freelancer 🚀
+            </a>
+            <a href="signup.html" class="bg-gray-900 text-white px-10 py-4 text-xl rounded-lg hover:shadow-2xl transition font-bold transform hover:scale-105">
+                Hire Talent 💼
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<!-- 🔖 Footer -->
+<footer class="py-10 bg-gray-900 text-gray-300">
+    <div class="max-w-6xl mx-auto px-4">
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            
+            <div>
+                <h3 class="text-2xl font-bold mb-4">
+                    <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+                </h3>
+                <p class="text-sm text-gray-400">
+                    India's premier freelancing platform connecting talented professionals with amazing opportunities.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-3 text-white">For Freelancers</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="apply.html" class="hover:text-brand transition">Find Work</a></li>
+                    <li><a href="#" class="hover:text-brand transition">How It Works</a></li>
+                    <li><a href="#" class="hover:text-brand transition">Success Stories</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-3 text-white">For Employers</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="postjob.html" class="hover:text-brand transition">Post a Job</a></li>
+                    <li><a href="#" class="hover:text-brand transition">Browse Talent</a></li>
+                    <li><a href="#" class="hover:text-brand transition">Pricing</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-3 text-white">Company</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="about.html" class="hover:text-brand transition">About Us</a></li>
+                    <li><a href="contact.html" class="hover:text-brand transition">Contact</a></li>
+                    <li><a href="#" class="hover:text-brand transition">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="border-t border-gray-700 pt-6 text-center text-sm">
+            <p>© 2025 Bharat Freelance • Made with ❤️ in India 🇮🇳</p>
+            <p class="mt-2 text-gray-500">All Rights Reserved</p>
+        </div>
+
+    </div>
+</footer>
+
+</body>
+</html>

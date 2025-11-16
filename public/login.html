@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Login – Bharat Freelance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .fade-in {
+      animation: fadeIn 1.2s ease-in-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-green-100 via-white to-blue-100 min-h-screen flex items-center justify-center fade-in">
+
+  <div class="bg-white shadow-2xl rounded-xl max-w-md w-full p-8 space-y-6">
+    <h2 class="text-center text-4xl font-extrabold text-green-700">Welcome Back</h2>
+
+    <form id="loginForm" class="space-y-5">
+      <input id="email" type="email" placeholder="✉️ Email" required
+        class="w-full p-3 border rounded-lg shadow focus:ring focus:ring-green-200" />
+
+      <input id="password" type="password" placeholder="🔒 Password" required
+        class="w-full p-3 border rounded-lg shadow focus:ring focus:ring-green-200" />
+
+      <button type="submit"
+        class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl shadow-md transition">
+        Login
+      </button>
+    </form>
+
+    <p class="text-center text-gray-600">
+      Not a member?
+      <a href="signup.html" class="text-green-600 font-semibold hover:underline">Create account</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const res = await fetch("http://localhost:5000/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  console.log(data);
+
+  // ✅ Check if token exists instead of success field
+  if (!data.token) {
+    return alert(data.message || "Invalid credentials ❌");
+  }
+
+  alert("🎉 Login Successful!");
+
+  // SAVE TOKEN + USER
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data.user));
+
+  // ROLE BASED REDIRECT
+  if (data.user.role === "employer") {
+    window.location.href = "dashboard-employer.html";
+  } else {
+    window.location.href = "dashboard-freelancer.html";
+  }
+});
+  </script>
+</body>
+
+</html>

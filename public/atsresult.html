@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ATS Match Score – Bharat Freelance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .animate-bounce-in {
+      animation: bounceIn 1s ease-out;
+    }
+
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
+
+      70% {
+        transform: scale(0.9);
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
+
+  <div class="p-10 bg-white rounded-xl shadow-2xl max-w-lg w-full animate-bounce-in">
+    <h2 class="text-3xl font-bold text-center text-green-600">🎯 Application Success!</h2>
+    <div id="scoreBox" class="mt-8 text-center">
+      <p class="text-xl text-gray-600">Your Resume Match Score:</p>
+      <p id="score" class="text-7xl font-extrabold text-green-600 mt-3"></p>
+    </div>
+    <div class="mt-8 text-center space-y-4">
+      <p class="text-gray-600 italic">📈 Higher score = Higher chance of selection!</p>
+      <a href="dashboard-freelancer.html" class="block py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition">Back to Dashboard</a>
+    </div>
+  </div>
+
+  <script>
+    const score = localStorage.getItem("atsScore");
+    const scoreEl = document.getElementById("score");
+
+    if (score) {
+      scoreEl.innerHTML = `${score}%`;
+    } else {
+      scoreEl.innerHTML = `N/A`;
+    }
+  </script>
+</body>
+
+</html>

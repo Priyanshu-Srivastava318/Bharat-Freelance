@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up – Bharat Freelance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { 
+      theme: { 
+        extend: { 
+          colors: { 
+            saffron: "#FF9933",
+            brand: "#1dbf73"
+          } 
+        } 
+      } 
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .fade-in {
+      animation: fadeIn 1.2s ease-in-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 min-h-screen flex items-center justify-center fade-in px-4">
+
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6">
+    
+    <!-- Logo/Header -->
+    <div class="text-center">
+      <a href="index.html" class="text-2xl md:text-3xl font-extrabold cursor-pointer hover:opacity-80 transition">
+  <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+</a>
+      <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
+      <p class="text-gray-600 mt-2">Join India's fastest growing freelance community</p>
+    </div>
+
+    <form id="signupForm" class="space-y-5">
+      
+      <!-- Full Name -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+        <input id="name" type="text" placeholder="Enter your full name" required 
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-brand transition" />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+        <input id="email" type="email" placeholder="your.email@example.com" required 
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-brand transition" />
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+        <input id="password" type="password" placeholder="Create a strong password" required 
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-brand transition" />
+        <p class="text-xs text-gray-500 mt-1">Must be at least 6 characters</p>
+      </div>
+
+      <!-- Role Selection -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">I want to</label>
+        <select id="role" required 
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-brand transition">
+          <option value="">Select your role</option>
+          <option value="freelancer">🚀 Find Work (Freelancer)</option>
+          <option value="employer">💼 Hire Talent (Employer)</option>
+        </select>
+      </div>
+
+      <!-- Terms -->
+      <div class="flex items-center">
+        <input id="terms" type="checkbox" required class="w-4 h-4 text-brand border-gray-300 rounded focus:ring-brand">
+        <label for="terms" class="ml-2 text-sm text-gray-600">
+          I agree to the <a href="#" class="text-brand hover:underline">Terms & Conditions</a>
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="submitBtn"
+        class="w-full bg-gradient-to-r from-saffron to-brand text-white py-3 rounded-xl hover:shadow-xl transition-all font-bold text-lg flex items-center justify-center gap-2">
+        <span id="btnText">Create Account</span>
+        <div id="btnLoader" class="hidden">
+          <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+        </div>
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <p class="text-center text-sm text-gray-600">
+      Already have an account?
+      <a href="login.html" class="text-brand font-semibold hover:underline">Login</a>
+    </p>
+
+    <!-- Social Proof -->
+    <div class="pt-6 border-t border-gray-200">
+      <div class="flex justify-center gap-8 text-center text-xs text-gray-500">
+        <div>
+          <p class="font-bold text-brand text-lg">10K+</p>
+          <p>Users</p>
+        </div>
+        <div>
+          <p class="font-bold text-saffron text-lg">5K+</p>
+          <p>Projects</p>
+        </div>
+        <div>
+          <p class="font-bold text-brand text-lg">98%</p>
+          <p>Satisfaction</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+document.getElementById("signupForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const btnLoader = document.getElementById('btnLoader');
+
+  // Show loading state
+  submitBtn.disabled = true;
+  btnText.classList.add('hidden');
+  btnLoader.classList.remove('hidden');
+
+  try {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
+
+    // Client-side validation
+    if (!name || !email || !password || !role) {
+      alert("⚠️ Please fill all fields!");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("⚠️ Password must be at least 6 characters!");
+      return;
+    }
+
+    console.log("Signing up:", { name, email, role });
+
+    const res = await fetch("http://localhost:5000/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password, role }),
+    });
+
+    const data = await res.json();
+    console.log("Server response:", data);
+
+    // Check for success
+    if (data.success || data.token || res.ok) {
+      
+      // Success message
+      alert(`🎉 Account Created Successfully!\n\nWelcome to Bharat Freelance, ${name}!\n\nYou can now login and start ${role === 'freelancer' ? 'finding work' : 'hiring talent'}.`);
+      
+      // Save user data if token is provided
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        // Auto redirect to appropriate dashboard
+        if (data.user.role === 'employer') {
+          window.location.href = "dashboard-employer.html";
+        } else {
+          window.location.href = "dashboard-freelancer.html";
+        }
+      } else {
+        // Redirect to login if no auto-login
+        window.location.href = "login.html";
+      }
+
+    } else {
+      // Show error message
+      alert("❌ " + (data.msg || data.message || data.error || "Signup failed. Please try again."));
+    }
+
+  } catch (error) {
+    console.error("Signup error:", error);
+    alert("❌ Network error. Please check your connection and try again.");
+  } finally {
+    // Reset button state
+    submitBtn.disabled = false;
+    btnText.classList.remove('hidden');
+    btnLoader.classList.add('hidden');
+  }
+});
+
+// Password strength indicator
+document.getElementById('password').addEventListener('input', function(e) {
+  const password = e.target.value;
+  const parent = e.target.parentElement;
+  
+  // Remove existing indicator
+  const existing = parent.querySelector('.password-strength');
+  if (existing) existing.remove();
+  
+  if (password.length > 0) {
+    const strength = document.createElement('p');
+    strength.className = 'password-strength text-xs mt-1';
+    
+    if (password.length < 6) {
+      strength.className += ' text-red-600';
+      strength.textContent = '⚠️ Too short';
+    } else if (password.length < 8) {
+      strength.className += ' text-yellow-600';
+      strength.textContent = '🟡 Fair';
+    } else {
+      strength.className += ' text-green-600';
+      strength.textContent = '✅ Strong';
+    }
+    
+    parent.appendChild(strength);
+  }
+});
+</script>
+
+</body>
+</html>

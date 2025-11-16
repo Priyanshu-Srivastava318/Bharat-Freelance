@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us | Bharat Freelance</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+ tailwind.config = { 
+   theme: { 
+     extend: { 
+       colors: { 
+         saffron: "#FF9933",
+         brand: "#1dbf73"
+       } 
+     } 
+   } 
+ }
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+  
+  * {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.8s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .contact-card {
+    transition: all 0.3s ease;
+  }
+  
+  .contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #FF9933, #1dbf73);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
+
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+<!-- 🎯 Header -->
+<header class="w-full bg-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 md:px-10 py-5 flex justify-between items-center">
+    <h1 class="text-2xl md:text-3xl font-extrabold">
+      <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+    </h1>
+    <a href="index.html" class="text-brand hover:text-saffron transition font-semibold flex items-center gap-2">
+      ← Back to Home
+    </a>
+  </div>
+</header>
+
+<!-- 🚀 Hero Section -->
+<section class="bg-gradient-to-r from-saffron via-orange-400 to-brand text-white py-20 fade-in">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+      <span class="text-2xl">📬</span>
+      <span class="text-sm font-semibold">We'd Love to Hear From You</span>
+    </div>
+    
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+      Get in Touch
+    </h1>
+    
+    <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto leading-relaxed">
+      Have questions, suggestions, or want to collaborate? We're here to help!
+    </p>
+  </div>
+</section>
+
+<!-- 📋 Main Content -->
+<section class="max-w-6xl mx-auto px-6 py-16 fade-in">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+    <!-- 📝 Contact Form -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-10">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="text-5xl">💬</div>
+        <h2 class="text-3xl font-bold">Send Us a Message</h2>
+      </div>
+      
+      <p class="text-gray-600 mb-8">
+        Fill out the form below and we'll get back to you within 24 hours!
+      </p>
+
+      <form id="contactForm" class="space-y-6">
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Your Name</label>
+          <input type="text" id="name"
+            placeholder="Enter your full name"
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition" 
+            required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+          <input type="email" id="email"
+            placeholder="your.email@example.com"
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition" 
+            required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
+          <select id="subject" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+            <option value="general">General Inquiry</option>
+            <option value="support">Technical Support</option>
+            <option value="feedback">Feedback</option>
+            <option value="partnership">Partnership</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Your Message</label>
+          <textarea id="message"
+            placeholder="Tell us what's on your mind..."
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition h-40 resize-none" 
+            required></textarea>
+        </div>
+
+        <button type="submit" class="bg-gradient-to-r from-saffron to-brand text-white w-full py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-2">
+          <span>Send Message</span>
+          <span>🚀</span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- 📍 Contact Information -->
+    <div class="space-y-6">
+      
+      <!-- Contact Info Cards -->
+      <div class="contact-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-brand">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">📧</div>
+          <div>
+            <h3 class="text-xl font-bold mb-2">Email Us</h3>
+            <p class="text-gray-600 mb-2">Send us an email anytime</p>
+            <a href="mailto:support@bharatfreelance.com" class="text-brand font-semibold hover:underline">
+              support@bharatfreelance.com
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-saffron">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">📱</div>
+          <div>
+            <h3 class="text-xl font-bold mb-2">Call Us</h3>
+            <p class="text-gray-600 mb-2">Mon-Fri from 9am to 6pm IST</p>
+            <a href="tel:+919876543210" class="text-saffron font-semibold hover:underline">
+              +91-9876543210
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">📍</div>
+          <div>
+            <h3 class="text-xl font-bold mb-2">Visit Us</h3>
+            <p class="text-gray-600">
+              Bharat Freelance Headquarters<br>
+              Gomti Nagar, Lucknow<br>
+              Uttar Pradesh - 226010<br>
+              India 🇮🇳
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-500">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">🌐</div>
+          <div>
+            <h3 class="text-xl font-bold mb-2">Follow Us</h3>
+            <p class="text-gray-600 mb-4">Stay connected on social media</p>
+            <div class="flex gap-3">
+              <a href="#" class="w-12 h-12 bg-blue-100 hover:bg-blue-500 text-blue-600 hover:text-white rounded-xl flex items-center justify-center transition text-xl">
+                💼
+              </a>
+              <a href="#" class="w-12 h-12 bg-pink-100 hover:bg-pink-500 text-pink-600 hover:text-white rounded-xl flex items-center justify-center transition text-xl">
+                📸
+              </a>
+              <a href="#" class="w-12 h-12 bg-gray-100 hover:bg-gray-800 text-gray-600 hover:text-white rounded-xl flex items-center justify-center transition text-xl">
+                🐙
+              </a>
+              <a href="#" class="w-12 h-12 bg-blue-100 hover:bg-blue-400 text-blue-600 hover:text-white rounded-xl flex items-center justify-center transition text-xl">
+                🐦
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- 🗺️ Map Section (Optional) -->
+<section class="max-w-6xl mx-auto px-6 py-8">
+  <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+    <div class="bg-gradient-to-r from-saffron to-brand text-white p-8 text-center">
+      <h2 class="text-3xl font-bold mb-2">Visit Our Office</h2>
+      <p class="text-lg opacity-90">Come say hi! We're located in the heart of Lucknow</p>
+    </div>
+    <div class="h-96 bg-gray-200 flex items-center justify-center">
+      <div class="text-center text-gray-500">
+        <div class="text-6xl mb-4">🗺️</div>
+        <p class="text-lg font-semibold">Map Coming Soon</p>
+        <p class="text-sm">Gomti Nagar, Lucknow, UP 🇮🇳</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ❓ FAQ Section -->
+<section class="bg-gradient-to-br from-blue-50 to-purple-50 py-16 mt-16">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-4">
+        Frequently Asked Questions
+      </h2>
+      <p class="text-gray-600 text-lg">Quick answers to common questions</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+          <span>❓</span> How do I get started?
+        </h3>
+        <p class="text-gray-600">
+          Simply sign up as a freelancer or employer, complete your profile, and start browsing jobs or posting projects!
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+          <span>💳</span> How does payment work?
+        </h3>
+        <p class="text-gray-600">
+          We use secure escrow payments through Razorpay. Funds are held safely until work is completed and approved.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+          <span>🤖</span> What is ATS scoring?
+        </h3>
+        <p class="text-gray-600">
+          Our AI analyzes your resume and gives you a compatibility score for each job, helping you apply to the best matches.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+          <span>🔒</span> Is my data safe?
+        </h3>
+        <p class="text-gray-600">
+          Absolutely! We use industry-standard encryption and never share your personal information without consent.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 🔖 Footer -->
+<footer class="bg-gray-900 text-gray-300 py-12">
+  <div class="max-w-6xl mx-auto px-6">
+    
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      
+      <div>
+        <h3 class="text-2xl font-bold mb-4">
+          <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+        </h3>
+        <p class="text-sm text-gray-400">
+          India's premier freelancing platform connecting talented professionals with amazing opportunities.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-3 text-white">Quick Links</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-brand transition">Home</a></li>
+          <li><a href="about.html" class="hover:text-brand transition">About</a></li>
+          <li><a href="contact.html" class="hover:text-brand transition">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-3 text-white">For Users</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="apply.html" class="hover:text-brand transition">Find Work</a></li>
+          <li><a href="postjob.html" class="hover:text-brand transition">Hire Talent</a></li>
+          <li><a href="#" class="hover:text-brand transition">How It Works</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-3 text-white">Support</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-brand transition">Help Center</a></li>
+          <li><a href="#" class="hover:text-brand transition">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-brand transition">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="border-t border-gray-700 pt-6 text-center text-sm">
+      <p>© 2025 Bharat Freelance • Made with ❤️ in India 🇮🇳</p>
+      <p class="mt-2 text-gray-500">All Rights Reserved</p>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+// Form submission handler
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const subject = document.getElementById('subject').value;
+  const message = document.getElementById('message').value;
+
+  // Here you would typically send this data to your backend
+  console.log('Form submitted:', { name, email, subject, message });
+
+  // Show success message
+  alert('✅ Thank you for contacting us! We\'ll get back to you within 24 hours.');
+  
+  // Reset form
+  this.reset();
+});
+</script>
+
+</body>
+</html>

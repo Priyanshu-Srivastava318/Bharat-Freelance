@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post a Job | Bharat Freelance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { 
+      theme: { 
+        extend: { 
+          colors: { 
+            saffron: "#FF9933",
+            brand: "#1dbf73"
+          } 
+        } 
+      } 
+    }
+  </script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.8s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- 🎯 Header -->
+  <header class="w-full bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 md:px-10 py-5 flex justify-between items-center">
+     <a href="index.html" class="text-2xl md:text-3xl font-extrabold cursor-pointer hover:opacity-80 transition">
+  <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+</a>
+      <a href="dashboard-employer.html" class="text-brand hover:text-saffron transition font-semibold flex items-center gap-2">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </header>
+
+  <!-- 🚀 Hero Banner -->
+  <div class="bg-gradient-to-r from-saffron via-orange-400 to-brand text-white py-12 fade-in">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
+        <span class="text-2xl">💼</span>
+        <span class="text-sm font-semibold">Hire Top Indian Talent</span>
+      </div>
+      
+      <h1 class="text-3xl md:text-5xl font-extrabold mb-4">
+        Post a Job
+      </h1>
+      
+      <p class="text-lg md:text-xl opacity-90">
+        Find the perfect freelancer for your project in minutes
+      </p>
+    </div>
+  </div>
+
+  <!-- 📋 Form Section -->
+  <div class="max-w-3xl mx-auto px-6 py-12 fade-in">
+    
+    <form id="postJobForm" class="bg-white rounded-2xl shadow-2xl p-8">
+      
+      <div class="flex items-center gap-3 mb-8">
+        <div class="text-4xl">📝</div>
+        <h2 class="text-2xl font-bold">Job Details</h2>
+      </div>
+
+      <!-- Job Title -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Job Title *</label>
+        <input id="title" type="text" placeholder="e.g., Full Stack Developer" required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+      </div>
+
+      <!-- Category -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+        <select id="category" required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+          <option value="">Select a category</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="Content Writing">Content Writing</option>
+          <option value="Video Editing">Video Editing</option>
+          <option value="Digital Marketing">Digital Marketing</option>
+          <option value="Mobile Apps">Mobile Apps</option>
+          <option value="Data Analysis">Data Analysis</option>
+          <option value="Voice Over">Voice Over</option>
+          <option value="General">General</option>
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Job Description *</label>
+        <textarea id="description" rows="6" placeholder="Describe what you need..." required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition resize-none"></textarea>
+        <p class="text-xs text-gray-500 mt-1">Include project scope, deliverables, and timeline</p>
+      </div>
+
+      <!-- Skills -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Required Skills *</label>
+        <input id="skills" type="text" placeholder="React, Node.js, MongoDB (comma-separated)" required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+        <p class="text-xs text-gray-500 mt-1">Separate skills with commas</p>
+      </div>
+
+      <!-- Budget -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Budget (₹) *</label>
+        <input id="budget" type="number" min="500" placeholder="e.g., 50000" required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+        <p class="text-xs text-gray-500 mt-1">Enter your project budget in Indian Rupees</p>
+      </div>
+
+      <!-- Duration -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Project Duration</label>
+        <select id="duration"
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+          <option value="Less than 1 week">Less than 1 week</option>
+          <option value="1-2 weeks">1-2 weeks</option>
+          <option value="2-4 weeks">2-4 weeks</option>
+          <option value="1-3 months">1-3 months</option>
+          <option value="3-6 months">3-6 months</option>
+          <option value="More than 6 months">More than 6 months</option>
+          <option value="Flexible" selected>Flexible</option>
+        </select>
+      </div>
+
+      <!-- Experience Level -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Experience Level Required</label>
+        <select id="experienceLevel"
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+          <option value="Any" selected>Any Level</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Expert">Expert</option>
+        </select>
+      </div>
+
+      <!-- Company Name -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Company Name</label>
+        <input id="company" type="text" placeholder="Your company or personal name"
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+      </div>
+
+      <!-- Info Box -->
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-xl mb-8">
+        <div class="flex gap-3">
+          <div class="text-2xl">💡</div>
+          <div>
+            <h4 class="font-bold text-blue-900 mb-2">Tips for Better Response</h4>
+            <ul class="text-sm text-blue-800 space-y-1">
+              <li>✅ Be clear and specific about your requirements</li>
+              <li>✅ List all necessary skills to attract the right talent</li>
+              <li>✅ Set a realistic budget based on project complexity</li>
+              <li>✅ Include project timeline and milestones</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="submitBtn"
+        class="w-full bg-gradient-to-r from-saffron to-brand text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-2">
+        <span id="btnText">🚀 Post Job & Find Talent</span>
+        <div id="btnLoader" class="hidden">
+          <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+        </div>
+      </button>
+
+    </form>
+
+  </div>
+
+<script>
+// Check authentication
+const user = JSON.parse(localStorage.getItem("user"));
+if (!user || user.role !== 'employer') {
+  alert("⚠️ Only employers can post jobs. Please login as employer.");
+  window.location.href = "login.html";
+}
+
+// Handle form submission
+document.getElementById("postJobForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const btnLoader = document.getElementById('btnLoader');
+
+  // Show loading state
+  submitBtn.disabled = true;
+  btnText.classList.add('hidden');
+  btnLoader.classList.remove('hidden');
+
+  try {
+    const data = {
+      title: document.getElementById('title').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      skills: document.getElementById('skills').value.split(",").map(s => s.trim()).filter(s => s),
+      budget: parseInt(document.getElementById('budget').value),
+      category: document.getElementById('category').value,
+      duration: document.getElementById('duration').value,
+      experienceLevel: document.getElementById('experienceLevel').value,
+      company: document.getElementById('company').value.trim() || user.name || 'Company',
+      employerId: user._id,
+      employerName: user.name || 'Employer',
+      status: 'active',
+      applicants: 0
+    };
+
+    console.log("Posting job:", data);
+
+    const res = await fetch("http://localhost:5000/api/jobs/create", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    console.log("Server response:", result);
+
+    if (result.success || result.msg) {
+      alert(`✅ Job Posted Successfully!\n\n📝 Title: ${data.title}\n💰 Budget: ₹${data.budget.toLocaleString('en-IN')}\n\nYou'll be notified when freelancers start applying!`);
+      window.location.href = "dashboard-employer.html";
+    } else {
+      throw new Error(result.error || "Failed to post job");
+    }
+
+  } catch (error) {
+    console.error("Error posting job:", error);
+    alert("❌ Error posting job. Please try again.\n\n" + error.message);
+  } finally {
+    // Reset button state
+    submitBtn.disabled = false;
+    btnText.classList.remove('hidden');
+    btnLoader.classList.add('hidden');
+  }
+});
+
+// Auto-fill company name from user data
+if (user && user.name) {
+  document.getElementById('company').value = user.name;
+}
+</script>
+
+</body>
+</html>

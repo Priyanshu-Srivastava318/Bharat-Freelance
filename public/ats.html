@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for Job - ATS | Bharat Freelance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { 
+      theme: { 
+        extend: { 
+          colors: { 
+            saffron: "#FF9933",
+            brand: "#1dbf73"
+          } 
+        } 
+      } 
+    }
+  </script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.8s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .upload-area {
+      border: 3px dashed #d1d5db;
+      transition: all 0.3s ease;
+    }
+    
+    .upload-area.drag-over {
+      border-color: #1dbf73;
+      background-color: #f0fdf4;
+    }
+    
+    .file-uploaded {
+      border-color: #1dbf73;
+      background-color: #f0fdf4;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- 🎯 Header -->
+  <header class="w-full bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 md:px-10 py-5 flex justify-between items-center">
+      <a href="index.html" class="text-2xl md:text-3xl font-extrabold cursor-pointer hover:opacity-80 transition">
+  <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+</a>
+      <a href="dashboard-freelancer.html" class="text-brand hover:text-saffron transition font-semibold flex items-center gap-2">
+        ← Back to Jobs
+      </a>
+    </div>
+  </header>
+
+  <!-- 🚀 Hero Banner -->
+  <div class="bg-gradient-to-r from-saffron via-orange-400 to-brand text-white py-12 fade-in">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
+        <span class="text-2xl">🤖</span>
+        <span class="text-sm font-semibold">AI-Powered Resume Analysis</span>
+      </div>
+      
+      <h1 class="text-3xl md:text-5xl font-extrabold mb-4">
+        Apply with ATS Resume Scoring
+      </h1>
+      
+      <p class="text-lg md:text-xl opacity-90">
+        Get instant AI-powered feedback on how well your resume matches this job
+      </p>
+    </div>
+  </div>
+
+  <!-- 📋 Main Content -->
+  <div class="max-w-4xl mx-auto px-6 py-12 fade-in">
+    
+    <!-- Job Info Card -->
+    <div id="jobInfo" class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="text-4xl">💼</div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800" id="jobTitle">Loading job details...</h2>
+          <p class="text-gray-600" id="jobCompany"></p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 p-4 bg-gray-50 rounded-xl">
+        <div>
+          <p class="text-xs text-gray-500 mb-1">Budget</p>
+          <p class="font-bold text-brand text-lg" id="jobBudget">₹0</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 mb-1">Category</p>
+          <p class="font-semibold text-gray-700" id="jobCategory">-</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 mb-1">Required Skills</p>
+          <div id="jobSkills" class="flex flex-wrap gap-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Form -->
+    <form id="applyForm" class="bg-white rounded-2xl shadow-2xl p-8">
+      
+      <div class="flex items-center gap-3 mb-6">
+        <div class="text-4xl">📄</div>
+        <h3 class="text-2xl font-bold">Upload Your Resume</h3>
+      </div>
+
+      <!-- Personal Info -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+        <input type="text" id="name" placeholder="Enter your full name" required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+        <input type="email" id="email" placeholder="your.email@example.com" required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+        <input type="tel" id="phone" placeholder="+91 98765 43210" required
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition">
+      </div>
+
+      <!-- Cover Letter -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Cover Letter (Optional)</label>
+        <textarea id="coverLetter" placeholder="Why are you a great fit for this position?" rows="4"
+          class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-brand transition resize-none"></textarea>
+      </div>
+
+      <!-- File Upload Area -->
+      <div class="mb-8">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Resume / CV</label>
+        
+        <div id="uploadArea" class="upload-area rounded-2xl p-8 text-center cursor-pointer">
+          <input type="file" id="resume" accept=".pdf,.doc,.docx" class="hidden" required>
+          
+          <div id="uploadPrompt">
+            <div class="text-6xl mb-4">📁</div>
+            <h4 class="text-xl font-bold text-gray-800 mb-2">Drop your resume here</h4>
+            <p class="text-gray-600 mb-4">or click to browse files</p>
+            <p class="text-sm text-gray-500">Supports: PDF, DOC, DOCX (Max 5MB)</p>
+          </div>
+
+          <div id="fileInfo" class="hidden">
+            <div class="text-6xl mb-4">✅</div>
+            <h4 class="text-xl font-bold text-brand mb-2">File Uploaded Successfully!</h4>
+            <p class="text-gray-700 font-semibold" id="fileName"></p>
+            <p class="text-sm text-gray-500 mt-2" id="fileSize"></p>
+            <button type="button" onclick="removeFile()" class="mt-4 text-red-600 hover:text-red-700 font-semibold">
+              🗑️ Remove File
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Box -->
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-xl mb-8">
+        <div class="flex gap-3">
+          <div class="text-2xl">💡</div>
+          <div>
+            <h4 class="font-bold text-blue-900 mb-2">How ATS Scoring Works</h4>
+            <ul class="text-sm text-blue-800 space-y-1">
+              <li>✅ Our AI analyzes your resume against job requirements</li>
+              <li>✅ Get instant compatibility score (0-100)</li>
+              <li>✅ Receive personalized feedback to improve your application</li>
+              <li>✅ Higher scores increase your chances of getting hired</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="submitBtn"
+        class="w-full bg-gradient-to-r from-saffron to-brand text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-2">
+        <span id="btnText">🚀 Submit Application & Get ATS Score</span>
+        <div id="btnLoader" class="hidden">
+          <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+        </div>
+      </button>
+
+    </form>
+
+  </div>
+
+  <!-- 🎯 Features Section -->
+  <section class="bg-gradient-to-br from-blue-50 to-purple-50 py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-12">Why Use Our ATS System?</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+          <div class="text-5xl mb-4">⚡</div>
+          <h3 class="text-xl font-bold mb-2">Instant Results</h3>
+          <p class="text-gray-600">Get your ATS score within seconds of uploading</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+          <div class="text-5xl mb-4">🎯</div>
+          <h3 class="text-xl font-bold mb-2">Accurate Matching</h3>
+          <p class="text-gray-600">AI-powered analysis ensures precise job fit</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+          <div class="text-5xl mb-4">📈</div>
+          <h3 class="text-xl font-bold mb-2">Improve Chances</h3>
+          <p class="text-gray-600">Get feedback to optimize your resume</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+  let uploadedFile = null;
+  const urlParams = new URLSearchParams(window.location.search);
+  const jobId = urlParams.get('job');
+
+  // Load job details
+  async function loadJobDetails() {
+    if(!jobId) {
+      alert("No job specified!");
+      window.location.href = "dashboard-freelancer.html";
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/jobs/${jobId}`);
+      const job = await res.json();
+      
+      document.getElementById('jobTitle').textContent = job.title;
+      document.getElementById('jobCompany').textContent = job.company || 'Company Name';
+      document.getElementById('jobBudget').textContent = `₹${(job.budget || 0).toLocaleString('en-IN')}`;
+      document.getElementById('jobCategory').textContent = job.category || 'General';
+      
+      if(job.skills && job.skills.length > 0) {
+        const skillsHTML = job.skills.slice(0, 3).map(skill => 
+          `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">${skill}</span>`
+        ).join('');
+        document.getElementById('jobSkills').innerHTML = skillsHTML;
+      }
+    } catch(error) {
+      console.error("Error loading job:", error);
+    }
+  }
+
+  // File upload handling
+  const uploadArea = document.getElementById('uploadArea');
+  const fileInput = document.getElementById('resume');
+
+  uploadArea.addEventListener('click', () => fileInput.click());
+
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('drag-over');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('drag-over');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('drag-over');
+    
+    const files = e.dataTransfer.files;
+    if(files.length > 0) {
+      fileInput.files = files;
+      handleFileSelect(files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if(e.target.files.length > 0) {
+      handleFileSelect(e.target.files[0]);
+    }
+  });
+
+  function handleFileSelect(file) {
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    
+    if(file.size > maxSize) {
+      alert('File too large! Maximum size is 5MB');
+      return;
+    }
+
+    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if(!validTypes.includes(file.type)) {
+      alert('Invalid file type! Please upload PDF, DOC, or DOCX');
+      return;
+    }
+
+    uploadedFile = file;
+    
+    document.getElementById('uploadPrompt').classList.add('hidden');
+    document.getElementById('fileInfo').classList.remove('hidden');
+    uploadArea.classList.add('file-uploaded');
+    
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
+  }
+
+  function removeFile() {
+    uploadedFile = null;
+    fileInput.value = '';
+    
+    document.getElementById('uploadPrompt').classList.remove('hidden');
+    document.getElementById('fileInfo').classList.add('hidden');
+    uploadArea.classList.remove('file-uploaded');
+  }
+
+  // Form submission
+  document.getElementById("applyForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if(!uploadedFile) {
+      alert("Please upload your resume!");
+      return;
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+
+    // Show loading state
+    submitBtn.disabled = true;
+    btnText.classList.add('hidden');
+    btnLoader.classList.remove('hidden');
+
+    try {
+      const formData = new FormData();
+      formData.append("resume", uploadedFile);
+      formData.append("jobId", jobId);
+      formData.append("name", document.getElementById('name').value);
+      formData.append("email", document.getElementById('email').value);
+      formData.append("phone", document.getElementById('phone').value);
+      formData.append("coverLetter", document.getElementById('coverLetter').value);
+
+      const res = await fetch("http://localhost:5000/api/ats/analyze", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      
+      // Show results
+      if(data.score) {
+        alert(`🎉 Application Submitted!\n\n📊 ATS Score: ${data.score}/100\n💬 Feedback: ${data.feedback}\n\nWe'll notify you when the employer reviews your application!`);
+        window.location.href = "dashboard-freelancer.html";
+      } else {
+        alert(data.msg || data.message || "Application submitted successfully!");
+      }
+
+    } catch(error) {
+      console.error("Error:", error);
+      alert("❌ Error submitting application. Please try again.");
+    } finally {
+      // Reset button state
+      submitBtn.disabled = false;
+      btnText.classList.remove('hidden');
+      btnLoader.classList.add('hidden');
+    }
+  });
+
+  // Initialize
+  loadJobDetails();
+
+  // Auto-fill user info if logged in
+  const user = JSON.parse(localStorage.getItem("user"));
+  if(user) {
+    document.getElementById('name').value = user.name || '';
+    document.getElementById('email').value = user.email || '';
+  }
+  </script>
+
+</body>
+</html>

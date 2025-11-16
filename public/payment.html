@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Payment – Bharat Freelance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script> <!-- Razorpay CDN -->
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-md">
+    <h2 class="text-3xl font-bold text-center text-green-700 mb-6">💼 Project Escrow Payment</h2>
+
+    <label class="block mb-4">
+      <span class="text-gray-600">Enter Payment Amount (₹):</span>
+      <input type="number" id="amount" placeholder="e.g. 5000" class="w-full p-3 border rounded-lg" required>
+    </label>
+
+    <button onclick="payNow()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all">
+      Pay Securely 💰
+    </button>
+  </div>
+
+  <script>
+    async function payNow() {
+      const res = await fetch("http://localhost:5000/api/pay/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: amount.value }),
+      });
+
+      const order = await res.json();
+      console.log(order);
+
+      const options = {
+        key: "YOUR_RAZORPAY_TEST_KEY", // Replace during live integration
+        amount: order.amount,
+        currency: "INR",
+        name: "Bharat Freelance",
+        description: "Secure Transaction",
+        order_id: order.id,
+        handler: function () {
+          alert("Payment Successful! 🧾 Money is now held in escrow.");
+          // redirect or update transaction status
+        },
+        theme: { color: "#10B981" },
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+
+</body>
+</html>

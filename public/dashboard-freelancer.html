@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelancer Dashboard | Bharat Freelance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { 
+      theme: { 
+        extend: { 
+          colors: { 
+            saffron: "#FF9933",
+            brand: "#1dbf73"
+          } 
+        } 
+      } 
+    }
+  </script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.6s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .job-card {
+      transition: all 0.3s ease;
+    }
+    
+    .job-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card-green {
+      background: linear-gradient(135deg, #1dbf73 0%, #059669 100%);
+    }
+    
+    .stat-card-orange {
+      background: linear-gradient(135deg, #FF9933 0%, #f97316 100%);
+    }
+    
+    .stat-card-blue {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    }
+    
+    .stat-card-purple {
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- 🎯 Top Navigation -->
+  <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="text-2xl md:text-3xl font-extrabold cursor-pointer hover:opacity-80 transition">
+  <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+</a>
+          <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">Freelancer</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="hidden md:flex gap-6 text-sm font-semibold">
+          <a href="#" class="text-brand border-b-2 border-brand pb-1">Browse Jobs</a>
+          <a href="#" class="text-gray-600 hover:text-brand transition">My Applications</a>
+          <a href="#" class="text-gray-600 hover:text-brand transition">Profile</a>
+        </div>
+
+        <!-- User Info -->
+        <div class="flex items-center gap-4">
+          <div class="text-right hidden sm:block">
+            <p class="text-sm font-semibold text-gray-800" id="userName">Welcome!</p>
+            <p class="text-xs text-gray-500" id="userEmail"></p>
+          </div>
+          <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition font-semibold text-sm">
+            Logout
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- 📊 Stats Cards -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 fade-in">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      
+      <!-- Available Jobs -->
+      <div class="stat-card-green text-white p-6 rounded-2xl shadow-lg">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm opacity-90 mb-1">Available Jobs</p>
+            <h3 class="text-4xl font-bold" id="totalJobs">0</h3>
+          </div>
+          <div class="text-4xl">💼</div>
+        </div>
+      </div>
+
+      <!-- Applications Sent -->
+      <div class="stat-card-blue text-white p-6 rounded-2xl shadow-lg">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm opacity-90 mb-1">Applied</p>
+            <h3 class="text-4xl font-bold" id="appliedJobs">0</h3>
+          </div>
+          <div class="text-4xl">📨</div>
+        </div>
+      </div>
+
+      <!-- Profile Views -->
+      <div class="stat-card-orange text-white p-6 rounded-2xl shadow-lg">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm opacity-90 mb-1">Profile Views</p>
+            <h3 class="text-4xl font-bold">0</h3>
+          </div>
+          <div class="text-4xl">👁️</div>
+        </div>
+      </div>
+
+      <!-- Earnings -->
+      <div class="stat-card-purple text-white p-6 rounded-2xl shadow-lg">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm opacity-90 mb-1">Potential Earnings</p>
+            <h3 class="text-4xl font-bold" id="potentialEarnings">₹0</h3>
+          </div>
+          <div class="text-4xl">💰</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 🎯 Header Section -->
+    <div class="bg-gradient-to-r from-saffron via-orange-400 to-brand text-white rounded-2xl shadow-lg p-8 mb-8 fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <h2 class="text-3xl font-bold mb-2">🚀 Find Your Next Opportunity</h2>
+          <p class="opacity-90">Browse available jobs and apply with your resume using our AI-powered ATS system</p>
+        </div>
+        <button onclick="scrollToJobs()" 
+          class="bg-white text-brand px-8 py-4 rounded-xl hover:shadow-2xl transition font-bold whitespace-nowrap">
+          Browse All Jobs →
+        </button>
+      </div>
+    </div>
+
+    <!-- 🔍 Search & Filter -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 fade-in">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <input type="text" id="searchInput" placeholder="🔍 Search jobs by title, skills, or keywords..." 
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-brand transition"
+            onkeyup="filterJobs()">
+        </div>
+        <select id="categoryFilter" onchange="filterJobs()" 
+          class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-brand transition">
+          <option value="">All Categories</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="Content Writing">Content Writing</option>
+          <option value="Video Editing">Video Editing</option>
+          <option value="Digital Marketing">Digital Marketing</option>
+          <option value="Mobile Apps">Mobile Apps</option>
+        </select>
+        <select id="budgetFilter" onchange="filterJobs()"
+          class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-brand transition">
+          <option value="">All Budgets</option>
+          <option value="0-10000">Under ₹10,000</option>
+          <option value="10000-50000">₹10,000 - ₹50,000</option>
+          <option value="50000-100000">₹50,000 - ₹1,00,000</option>
+          <option value="100000-999999">Above ₹1,00,000</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 📋 Jobs List -->
+    <div id="jobList" class="space-y-6 fade-in"></div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden bg-white rounded-2xl shadow-lg p-12 text-center">
+      <div class="text-8xl mb-4">🔍</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">No Jobs Found</h3>
+      <p class="text-gray-600 mb-6">Try adjusting your search filters or check back later for new opportunities!</p>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="bg-white rounded-2xl shadow-lg p-12 text-center">
+      <div class="text-6xl mb-4 animate-bounce">⏳</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Loading Jobs...</h3>
+      <p class="text-gray-600">Please wait while we fetch the latest opportunities</p>
+    </div>
+
+  </div>
+
+  <script>
+  let allJobs = [];
+
+  // Load user info
+  function loadUserInfo() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(user) {
+      document.getElementById("userName").textContent = user.name || "Welcome!";
+      document.getElementById("userEmail").textContent = user.email || "";
+    }
+  }
+
+  // Load jobs
+  async function loadJobs() {
+    try {
+      const loadingState = document.getElementById("loadingState");
+      const jobList = document.getElementById("jobList");
+      const emptyState = document.getElementById("emptyState");
+
+      loadingState.style.display = "block";
+      jobList.innerHTML = "";
+      emptyState.classList.add("hidden");
+
+      const res = await fetch("http://localhost:5000/api/jobs/all");
+      const jobs = await res.json();
+      
+      allJobs = jobs;
+      
+      loadingState.style.display = "none";
+
+      if(jobs.length === 0) {
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      // Update stats
+      document.getElementById("totalJobs").textContent = jobs.length;
+      
+      let totalBudget = 0;
+      jobs.forEach(job => {
+        totalBudget += job.budget || 0;
+      });
+      document.getElementById("potentialEarnings").textContent = `₹${totalBudget.toLocaleString('en-IN')}`;
+
+      displayJobs(jobs);
+
+    } catch(error) {
+      console.error("Error loading jobs:", error);
+      document.getElementById("loadingState").style.display = "none";
+      alert("❌ Error loading jobs. Please try again.");
+    }
+  }
+
+  // Display jobs
+  function displayJobs(jobs) {
+    const container = document.getElementById("jobList");
+    const emptyState = document.getElementById("emptyState");
+    
+    container.innerHTML = "";
+
+    if(jobs.length === 0) {
+      emptyState.classList.remove("hidden");
+      return;
+    }
+
+    emptyState.classList.add("hidden");
+
+    jobs.forEach((job, index) => {
+      const categoryColors = {
+        'Web Development': 'bg-blue-100 text-blue-700',
+        'Graphic Design': 'bg-purple-100 text-purple-700',
+        'Content Writing': 'bg-green-100 text-green-700',
+        'Video Editing': 'bg-red-100 text-red-700',
+        'Digital Marketing': 'bg-yellow-100 text-yellow-700',
+        'Mobile Apps': 'bg-indigo-100 text-indigo-700'
+      };
+
+      const categoryColor = categoryColors[job.category] || 'bg-gray-100 text-gray-700';
+      
+      container.innerHTML += `
+        <div class="job-card bg-white p-6 rounded-2xl shadow-lg" style="animation-delay: ${index * 0.1}s;">
+          
+          <!-- Header -->
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2 flex-wrap">
+                <h3 class="text-2xl font-bold text-gray-800">${job.title}</h3>
+                <span class="text-xs ${categoryColor} px-3 py-1 rounded-full font-semibold">${job.category || 'General'}</span>
+                <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <span>🟢</span> Active
+                </span>
+              </div>
+              <p class="text-gray-600 mb-3">${job.description}</p>
+            </div>
+          </div>
+
+          <!-- Details Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 py-4 border-y border-gray-100">
+            
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Budget</p>
+              <p class="font-bold text-brand text-xl">₹${(job.budget || 0).toLocaleString('en-IN')}</p>
+            </div>
+
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Duration</p>
+              <p class="font-semibold text-gray-700">${job.duration || 'Flexible'}</p>
+            </div>
+
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Posted</p>
+              <p class="font-semibold text-gray-700">${getTimeAgo(job.createdAt)}</p>
+            </div>
+
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Proposals</p>
+              <p class="font-bold text-saffron text-xl">${job.applicants || 0}</p>
+            </div>
+
+          </div>
+
+          <!-- Skills -->
+          ${job.skills && job.skills.length > 0 ? `
+            <div class="mb-4">
+              <p class="text-xs text-gray-500 mb-2">Required Skills:</p>
+              <div class="flex flex-wrap gap-2">
+                ${job.skills.map(skill => `
+                  <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">${skill}</span>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Company Info -->
+          <div class="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
+            <div class="w-12 h-12 bg-gradient-to-br from-saffron to-brand rounded-full flex items-center justify-center text-white font-bold text-xl">
+              ${(job.company || 'C')[0].toUpperCase()}
+            </div>
+            <div>
+              <p class="font-semibold text-gray-800">${job.company || 'Company Name'}</p>
+              <p class="text-xs text-gray-500">Posted by ${job.employerName || 'Employer'}</p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3">
+            <button onclick="apply('${job._id}')" 
+              class="flex-1 bg-gradient-to-r from-saffron to-brand text-white px-6 py-3 rounded-xl hover:shadow-2xl transition font-bold flex items-center justify-center gap-2">
+              <span>📄</span> Apply with Resume
+            </button>
+            
+            <button onclick="viewDetails('${job._id}')" 
+              class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl transition font-semibold">
+              View Details
+            </button>
+          </div>
+
+        </div>
+      `;
+    });
+  }
+
+  // Filter jobs
+  function filterJobs() {
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+    const category = document.getElementById("categoryFilter").value;
+    const budget = document.getElementById("budgetFilter").value;
+
+    let filtered = allJobs.filter(job => {
+      const matchesSearch = job.title.toLowerCase().includes(searchTerm) || 
+                           job.description.toLowerCase().includes(searchTerm) ||
+                           (job.skills && job.skills.some(s => s.toLowerCase().includes(searchTerm)));
+      
+      const matchesCategory = !category || job.category === category;
+      
+      let matchesBudget = true;
+      if(budget) {
+        const [min, max] = budget.split('-').map(Number);
+        matchesBudget = job.budget >= min && job.budget <= (max || Infinity);
+      }
+
+      return matchesSearch && matchesCategory && matchesBudget;
+    });
+
+    displayJobs(filtered);
+  }
+
+  // Helper: Time ago
+  function getTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if(seconds < 60) return 'Just now';
+    if(seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if(seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    if(seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+    return date.toLocaleDateString('en-IN');
+  }
+
+  function apply(jobId) {
+    location.href = `ats.html?job=${jobId}`;
+  }
+
+  function viewDetails(jobId) {
+    alert("Job details page coming soon!");
+  }
+
+  function scrollToJobs() {
+    document.getElementById("jobList").scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function logout() {
+    if(confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      location.href = "login.html";
+    }
+  }
+
+  // Initialize
+  loadUserInfo();
+  loadJobs();
+  </script>
+
+</body>
+</html>

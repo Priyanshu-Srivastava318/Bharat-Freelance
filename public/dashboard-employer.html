@@ -171,170 +171,182 @@
 
   </div>
 
-  <script>
-  // Load user info
-  function loadUserInfo() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if(user) {
-      document.getElementById("userName").textContent = user.name || "Welcome Back!";
-      document.getElementById("userEmail").textContent = user.email || "";
-    }
+ <!-- 🔑 CONFIG -->
+<script src="config.js"></script>
+
+<script>
+// Load user info
+function loadUserInfo() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    document.getElementById("userName").textContent = user.name || "Welcome Back!";
+    document.getElementById("userEmail").textContent = user.email || "";
+  }
+}
+
+// Load employer jobs
+async function loadEmployerJobs() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  
+  if (!user || user.role !== "employer") {
+    alert("⚠️ Unauthorized! Only employers can access this.");
+    location.href = "login.html";
+    return;
   }
 
-  // Load employer jobs
-  async function loadEmployerJobs(){
-    const user = JSON.parse(localStorage.getItem("user"));
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/jobs/byEmployer/${user._id}`);
+    const jobs = await res.json();
     
-    if(!user || user.role !== 'employer') {
-      alert("⚠️ Unauthorized! Only employers can access this.");
-      location.href = "login.html";
+    const container = document.getElementById("jobList");
+    const emptyState = document.getElementById("emptyState");
+    
+    container.innerHTML = "";
+
+    if (jobs.length === 0) {
+      container.classList.add("hidden");
+      emptyState.classList.remove("hidden");
       return;
     }
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/jobs/byEmployer/${user._id}`);
-      const jobs = await res.json();
-      
-      const container = document.getElementById("jobList");
-      const emptyState = document.getElementById("emptyState");
-      
-      container.innerHTML = "";
+    container.classList.remove("hidden");
+    emptyState.classList.add("hidden");
 
-      if(jobs.length === 0){
-        container.classList.add("hidden");
-        emptyState.classList.remove("hidden");
-        return;
-      }
+    // Calculate stats
+    let totalBudget = 0;
+    let activeCount = 0;
+    let totalApplicants = 0;
+    
+    jobs.forEach(job => {
+      totalBudget += job.budget || 0;
+      totalApplicants += job.applicants || 0;
+      if (job.status !== "closed") activeCount++;
+    });
 
-      container.classList.remove("hidden");
-      emptyState.classList.add("hidden");
+    // Update stats
+    document.getElementById("totalJobs").textContent = jobs.length;
+    document.getElementById("activeJobs").textContent = activeCount;
+    document.getElementById("totalApplicants").textContent = totalApplicants;
+    document.getElementById("totalBudget").textContent = `₹${totalBudget.toLocaleString("en-IN")}`;
 
-      // Calculate stats
-      let totalBudget = 0;
-      let activeCount = 0;
-      
-      jobs.forEach(job => {
-        totalBudget += job.budget || 0;
-        if(job.status !== 'closed') activeCount++;
-      });
+    jobs.forEach((job, index) => {
+      const statusColor = job.status === "closed"
+        ? "bg-red-100 text-red-700"
+        : "bg-green-100 text-green-700";
+      const statusText = job.status === "closed" ? "Closed" : "Active";
 
-      // Update stats
-      document.getElementById("totalJobs").textContent = jobs.length;
-      document.getElementById("activeJobs").textContent = activeCount;
-      document.getElementById("totalBudget").textContent = `₹${totalBudget.toLocaleString('en-IN')}`;
-      // Note: totalApplicants needs actual data from backend
-
-      jobs.forEach((job, index) => {
-        const statusColor = job.status === 'closed' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700';
-        const statusText = job.status === 'closed' ? 'Closed' : 'Active';
+      container.innerHTML += `
+        <div class="job-card bg-white p-6 rounded-2xl shadow-lg" style="animation-delay: ${index * 0.1}s;">
         
-        container.innerHTML += `
-          <div class="job-card bg-white p-6 rounded-2xl shadow-lg" style="animation-delay: ${index * 0.1}s;">
-            
-            <!-- Header -->
-            <div class="flex justify-between items-start mb-4">
-              <div class="flex-1">
-                <div class="flex items-center gap-3 mb-2">
-                  <h3 class="text-2xl font-bold text-gray-800">${job.title}</h3>
-                  <span class="text-xs ${statusColor} px-3 py-1 rounded-full font-semibold">${statusText}</span>
-                </div>
-                <p class="text-gray-600 line-clamp-2">${job.description}</p>
+          <!-- Header -->
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="text-2xl font-bold text-gray-800">${job.title}</h3>
+                <span class="text-xs ${statusColor} px-3 py-1 rounded-full font-semibold">${statusText}</span>
               </div>
+              <p class="text-gray-600 line-clamp-2">${job.description}</p>
+            </div>
+          </div>
+
+          <!-- Details Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 py-4 border-y border-gray-100">
+
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Budget</p>
+              <p class="font-bold text-brand text-lg">₹${(job.budget || 0).toLocaleString("en-IN")}</p>
             </div>
 
-            <!-- Details Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 py-4 border-y border-gray-100">
-              
-              <div>
-                <p class="text-xs text-gray-500 mb-1">Budget</p>
-                <p class="font-bold text-brand text-lg">₹${(job.budget || 0).toLocaleString('en-IN')}</p>
-              </div>
-
-              <div>
-                <p class="text-xs text-gray-500 mb-1">Category</p>
-                <p class="font-semibold text-gray-700">${job.category || 'General'}</p>
-              </div>
-
-              <div>
-                <p class="text-xs text-gray-500 mb-1">Posted On</p>
-                <p class="font-semibold text-gray-700">${new Date(job.createdAt).toLocaleDateString('en-IN')}</p>
-              </div>
-
-              <div>
-                <p class="text-xs text-gray-500 mb-1">Applicants</p>
-                <p class="font-bold text-saffron text-lg">${job.applicants || 0}</p>
-              </div>
-
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Category</p>
+              <p class="font-semibold text-gray-700">${job.category || "General"}</p>
             </div>
 
-            <!-- Skills -->
-            ${job.skills && job.skills.length > 0 ? `
-              <div class="mb-4">
-                <p class="text-xs text-gray-500 mb-2">Required Skills:</p>
-                <div class="flex flex-wrap gap-2">
-                  ${job.skills.map(skill => `
-                    <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">${skill}</span>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ''}
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Posted On</p>
+              <p class="font-semibold text-gray-700">${new Date(job.createdAt).toLocaleDateString("en-IN")}</p>
+            </div>
 
-            <!-- Actions -->
-            <div class="flex gap-3">
-              <button onclick="viewApplicants('${job._id}')" 
-                class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition font-semibold flex items-center justify-center gap-2">
-                <span>👥</span> View Applicants
-              </button>
-              
-              <button onclick="editJob('${job._id}')" 
-                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl transition font-semibold">
-                ✏️ Edit
-              </button>
-              
-              <button onclick="deleteJob('${job._id}')" 
-                class="bg-red-50 hover:bg-red-100 text-red-600 px-6 py-3 rounded-xl transition font-semibold">
-                🗑️
-              </button>
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Applicants</p>
+              <p class="font-bold text-saffron text-lg">${job.applicants || 0}</p>
             </div>
 
           </div>
-        `;
-      });
 
-    } catch(error) {
-      console.error("Error loading jobs:", error);
-      alert("❌ Error loading jobs. Please try again.");
-    }
+          <!-- Skills -->
+          ${
+            job.skills && job.skills.length > 0
+              ? `
+            <div class="mb-4">
+              <p class="text-xs text-gray-500 mb-2">Required Skills:</p>
+              <div class="flex flex-wrap gap-2">
+                ${job.skills
+                  .map(
+                    (skill) =>
+                      `<span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">${skill}</span>`
+                  )
+                  .join("")}
+              </div>
+            </div>`
+              : ""
+          }
+
+          <!-- Actions -->
+          <div class="flex gap-3">
+            <button onclick="viewApplicants('${job._id}')"
+              class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition font-semibold flex items-center justify-center gap-2">
+              <span>👥</span> View Applicants
+            </button>
+
+            <button onclick="editJob('${job._id}')"
+              class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl transition font-semibold">
+              ✏️ Edit
+            </button>
+
+            <button onclick="deleteJob('${job._id}')"
+              class="bg-red-50 hover:bg-red-100 text-red-600 px-6 py-3 rounded-xl transition font-semibold">
+              🗑️
+            </button>
+          </div>
+
+        </div>
+      `;
+    });
+
+  } catch (error) {
+    console.error("Error loading jobs:", error);
+    alert("❌ Error loading jobs. Please try again.");
   }
+}
 
-  function viewApplicants(jobId) {
-    location.href = `view-applicants.html?job=${jobId}`;
+function viewApplicants(jobId) {
+  location.href = `view-applicants.html?job=${jobId}`;
+}
+
+function editJob(jobId) {
+  alert("Edit functionality coming soon!");
+}
+
+function deleteJob(jobId) {
+  if (confirm("Are you sure you want to delete this job?")) {
+    alert("Delete functionality coming soon!");
   }
+}
 
-  function editJob(jobId) {
-    // TODO: Navigate to edit page
-    alert("Edit functionality coming soon!");
+function logout() {
+  if (confirm("Are you sure you want to logout?")) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    location.href = "login.html";
   }
+}
 
-  function deleteJob(jobId) {
-    if(confirm("Are you sure you want to delete this job?")) {
-      // TODO: Implement delete
-      alert("Delete functionality coming soon!");
-    }
-  }
+// Initialize
+loadUserInfo();
+loadEmployerJobs();
+</script>
 
-  function logout() {
-    if(confirm("Are you sure you want to logout?")) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      location.href = "login.html";
-    }
-  }
-
-  // Initialize
-  loadUserInfo();
-  loadEmployerJobs();
-  </script>
 
 </body>
 </html>

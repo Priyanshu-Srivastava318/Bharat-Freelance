@@ -44,41 +44,43 @@
     </p>
   </div>
 
+  
+  <script src="config.js"></script>
+
+  <!-- 🟢 LOGIN LOGIC -->
   <script>
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+      e.preventDefault();
 
-  const res = await fetch("http://localhost:5000/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.value,
+          password: password.value
+        })
+      });
 
-  const data = await res.json();
-  console.log(data);
+      const data = await res.json();
+      console.log(data);
 
-  // ✅ Check if token exists instead of success field
-  if (!data.token) {
-    return alert(data.message || "Invalid credentials ❌");
-  }
+      if (!data.token) {
+        return alert(data.message || "Invalid credentials ❌");
+      }
 
-  alert("🎉 Login Successful!");
+      alert("🎉 Login Successful!");
 
-  // SAVE TOKEN + USER
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-  // ROLE BASED REDIRECT
-  if (data.user.role === "employer") {
-    window.location.href = "dashboard-employer.html";
-  } else {
-    window.location.href = "dashboard-freelancer.html";
-  }
-});
+      if (data.user.role === "employer") {
+        window.location.href = "dashboard-employer.html";
+      } else {
+        window.location.href = "dashboard-freelancer.html";
+      }
+    });
   </script>
+
 </body>
 
 </html>

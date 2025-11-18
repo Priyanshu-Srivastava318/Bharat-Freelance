@@ -71,8 +71,8 @@
         <!-- Logo -->
         <div class="flex items-center gap-3">
           <a href="index.html" class="text-2xl md:text-3xl font-extrabold cursor-pointer hover:opacity-80 transition">
-  <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
-</a>
+            <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+          </a>
           <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">Freelancer</span>
         </div>
 
@@ -210,6 +210,9 @@
 
   </div>
 
+  <!-- 🔑 CONFIG -->
+  <script src="config.js"></script>
+
   <script>
   let allJobs = [];
 
@@ -233,12 +236,12 @@
       jobList.innerHTML = "";
       emptyState.classList.add("hidden");
 
-      const res = await fetch("http://localhost:5000/api/jobs/all");
+      const res = await fetch(`${API_BASE_URL}/api/jobs/all`);
       const jobs = await res.json();
       
       allJobs = jobs;
       
-      loadingState.style.display = "none";
+      loadingState.style.display = "none`;
 
       if(jobs.length === 0) {
         emptyState.classList.remove("hidden");
@@ -253,7 +256,7 @@
         totalBudget += job.budget || 0;
       });
       document.getElementById("potentialEarnings").textContent = `₹${totalBudget.toLocaleString('en-IN')}`;
-
+      
       displayJobs(jobs);
 
     } catch(error) {

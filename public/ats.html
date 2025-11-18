@@ -57,8 +57,8 @@
   <header class="w-full bg-white shadow-lg">
     <div class="max-w-7xl mx-auto px-6 md:px-10 py-5 flex justify-between items-center">
       <a href="index.html" class="text-2xl md:text-3xl font-extrabold cursor-pointer hover:opacity-80 transition">
-  <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
-</a>
+        <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+      </a>
       <a href="dashboard-freelancer.html" class="text-brand hover:text-saffron transition font-semibold flex items-center gap-2">
         ← Back to Jobs
       </a>
@@ -172,23 +172,6 @@
         </div>
       </div>
 
-      <!-- Info Box -->
-      <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-xl mb-8">
-        <div class="flex gap-3">
-          <div class="text-2xl">💡</div>
-          <div>
-            <h4 class="font-bold text-blue-900 mb-2">How ATS Scoring Works</h4>
-            <ul class="text-sm text-blue-800 space-y-1">
-              <li>✅ Our AI analyzes your resume against job requirements</li>
-              <li>✅ Get instant compatibility score (0-100)</li>
-              <li>✅ Receive personalized feedback to improve your application</li>
-              <li>✅ Higher scores increase your chances of getting hired</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Submit Button -->
       <button type="submit" id="submitBtn"
         class="w-full bg-gradient-to-r from-saffron to-brand text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-2">
         <span id="btnText">🚀 Submit Application & Get ATS Score</span>
@@ -201,7 +184,7 @@
 
   </div>
 
-  <!-- 🎯 Features Section -->
+  <!-- Features -->
   <section class="bg-gradient-to-br from-blue-50 to-purple-50 py-16">
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="text-3xl font-bold text-center mb-12">Why Use Our ATS System?</h2>
@@ -230,12 +213,14 @@
     </div>
   </section>
 
+  <!-- 🟢 CONFIG HERE -->
+  <script src="config.js"></script>
+
   <script>
   let uploadedFile = null;
   const urlParams = new URLSearchParams(window.location.search);
   const jobId = urlParams.get('job');
 
-  // Load job details
   async function loadJobDetails() {
     if(!jobId) {
       alert("No job specified!");
@@ -244,7 +229,7 @@
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/jobs/${jobId}`);
+      const res = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`);
       const job = await res.json();
       
       document.getElementById('jobTitle').textContent = job.title;
@@ -263,25 +248,21 @@
     }
   }
 
-  // File upload handling
+  // File upload logic...
   const uploadArea = document.getElementById('uploadArea');
   const fileInput = document.getElementById('resume');
 
   uploadArea.addEventListener('click', () => fileInput.click());
-
   uploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadArea.classList.add('drag-over');
   });
-
   uploadArea.addEventListener('dragleave', () => {
     uploadArea.classList.remove('drag-over');
   });
-
   uploadArea.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadArea.classList.remove('drag-over');
-    
     const files = e.dataTransfer.files;
     if(files.length > 0) {
       fileInput.files = files;
@@ -296,16 +277,9 @@
   });
 
   function handleFileSelect(file) {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    
+    const maxSize = 5 * 1024 * 1024; 
     if(file.size > maxSize) {
       alert('File too large! Maximum size is 5MB');
-      return;
-    }
-
-    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if(!validTypes.includes(file.type)) {
-      alert('Invalid file type! Please upload PDF, DOC, or DOCX');
       return;
     }
 
@@ -328,7 +302,6 @@
     uploadArea.classList.remove('file-uploaded');
   }
 
-  // Form submission
   document.getElementById("applyForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -341,7 +314,6 @@
     const btnText = document.getElementById('btnText');
     const btnLoader = document.getElementById('btnLoader');
 
-    // Show loading state
     submitBtn.disabled = true;
     btnText.classList.add('hidden');
     btnLoader.classList.remove('hidden');
@@ -355,36 +327,31 @@
       formData.append("phone", document.getElementById('phone').value);
       formData.append("coverLetter", document.getElementById('coverLetter').value);
 
-      const res = await fetch("http://localhost:5000/api/ats/analyze", {
+      const res = await fetch(`${API_BASE_URL}/api/ats/analyze`, {
         method: "POST",
         body: formData
       });
 
       const data = await res.json();
       
-      // Show results
       if(data.score) {
-        alert(`🎉 Application Submitted!\n\n📊 ATS Score: ${data.score}/100\n💬 Feedback: ${data.feedback}\n\nWe'll notify you when the employer reviews your application!`);
+        alert(`🎉 Application Submitted!\n\n📊 ATS Score: ${data.score}/100\n💬 Feedback: ${data.feedback}`);
         window.location.href = "dashboard-freelancer.html";
       } else {
-        alert(data.msg || data.message || "Application submitted successfully!");
+        alert(data.msg || "Application submitted successfully!");
       }
 
     } catch(error) {
-      console.error("Error:", error);
-      alert("❌ Error submitting application. Please try again.");
+      alert("❌ Error submitting application. Please try again.\n\n" + error.message);
     } finally {
-      // Reset button state
       submitBtn.disabled = false;
       btnText.classList.remove('hidden');
       btnLoader.classList.add('hidden');
     }
   });
 
-  // Initialize
   loadJobDetails();
 
-  // Auto-fill user info if logged in
   const user = JSON.parse(localStorage.getItem("user"));
   if(user) {
     document.getElementById('name').value = user.name || '';

@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Secure Payment – Bharat Freelance</title>
+  <script src="config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script> <!-- Razorpay CDN -->
 </head>
@@ -26,7 +27,7 @@
 
   <script>
     async function payNow() {
-      const res = await fetch("http://localhost:5000/api/pay/order", {
+      const res = await fetch("${API_BASE_URL}/api/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: amount.value }),

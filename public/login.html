@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Login – Bharat Freelance</title>
+  <script src="config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -44,43 +45,41 @@
     </p>
   </div>
 
-  
-  <script src="config.js"></script>
-
-  <!-- 🟢 LOGIN LOGIC -->
   <script>
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.value,
-          password: password.value
-        })
-      });
+ const res = await fetch(`${API_BASE_URL}/api/auth/login`, { {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
 
-      const data = await res.json();
-      console.log(data);
+  const data = await res.json();
+  console.log(data);
 
-      if (!data.token) {
-        return alert(data.message || "Invalid credentials ❌");
-      }
+  // ✅ Check if token exists instead of success field
+  if (!data.token) {
+    return alert(data.message || "Invalid credentials ❌");
+  }
 
-      alert("🎉 Login Successful!");
+  alert("🎉 Login Successful!");
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+  // SAVE TOKEN + USER
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data.user));
 
-      if (data.user.role === "employer") {
-        window.location.href = "dashboard-employer.html";
-      } else {
-        window.location.href = "dashboard-freelancer.html";
-      }
-    });
+  // ROLE BASED REDIRECT
+  if (data.user.role === "employer") {
+    window.location.href = "dashboard-employer.html";
+  } else {
+    window.location.href = "dashboard-freelancer.html";
+  }
+});
   </script>
-
 </body>
 
 </html>

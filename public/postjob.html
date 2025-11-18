@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Post a Job | Bharat Freelance</title>
+  <script src="config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { 
@@ -190,76 +191,77 @@
 
   </div>
 
-  <!-- 🟢 CONFIG LOADED FIRST -->
-  <script src="config.js"></script>
+<script>
+// Check authentication
+const user = JSON.parse(localStorage.getItem("user"));
+if (!user || user.role !== 'employer') {
+  alert("⚠️ Only employers can post jobs. Please login as employer.");
+  window.location.href = "login.html";
+}
 
-  <script>
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || user.role !== 'employer') {
-      alert("⚠️ Only employers can post jobs. Please login as employer.");
-      window.location.href = "login.html";
-    }
+// Handle form submission
+document.getElementById("postJobForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    document.getElementById("postJobForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const btnLoader = document.getElementById('btnLoader');
 
-      const submitBtn = document.getElementById('submitBtn');
-      const btnText = document.getElementById('btnText');
-      const btnLoader = document.getElementById('btnLoader');
+  // Show loading state
+  submitBtn.disabled = true;
+  btnText.classList.add('hidden');
+  btnLoader.classList.remove('hidden');
 
-      // Button loading state
-      submitBtn.disabled = true;
-      btnText.classList.add('hidden');
-      btnLoader.classList.remove('hidden');
+  try {
+    const data = {
+      title: document.getElementById('title').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      skills: document.getElementById('skills').value.split(",").map(s => s.trim()).filter(s => s),
+      budget: parseInt(document.getElementById('budget').value),
+      category: document.getElementById('category').value,
+      duration: document.getElementById('duration').value,
+      experienceLevel: document.getElementById('experienceLevel').value,
+      company: document.getElementById('company').value.trim() || user.name || 'Company',
+      employerId: user._id,
+      employerName: user.name || 'Employer',
+      status: 'active',
+      applicants: 0
+    };
 
-      try {
-        const data = {
-          title: document.getElementById('title').value.trim(),
-          description: document.getElementById('description').value.trim(),
-          skills: document.getElementById('skills').value.split(",").map(s => s.trim()).filter(s => s),
-          budget: parseInt(document.getElementById('budget').value),
-          category: document.getElementById('category').value,
-          duration: document.getElementById('duration').value,
-          experienceLevel: document.getElementById('experienceLevel').value,
-          company: document.getElementById('company').value.trim() || user.name || 'Company',
-          employerId: user._id,
-          employerName: user.name || 'Employer',
-          status: 'active',
-          applicants: 0
-        };
+    console.log("Posting job:", data);
 
-        console.log("Posting job:", data);
-
-        const res = await fetch(`${API_BASE_URL}/api/jobs/create`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        const result = await res.json();
-        console.log("Server response:", result);
-
-        if (result.success || result.msg) {
-          alert(`🎉 Job Posted Successfully!\n\n📝 Title: ${data.title}\n💰 Budget: ₹${data.budget.toLocaleString('en-IN')}`);
-          window.location.href = "dashboard-employer.html";
-        } else {
-          throw new Error(result.error || "Failed to post job");
-        }
-
-      } catch (error) {
-        console.error("Error posting job:", error);
-        alert("❌ Error posting job. Please try again.\n\n" + error.message);
-      } finally {
-        submitBtn.disabled = false;
-        btnText.classList.remove('hidden');
-        btnLoader.classList.add('hidden');
-      }
+    const res = await fetch(`${API_BASE_URL}/api/jobs/create`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
     });
 
-    if (user && user.name) {
-      document.getElementById('company').value = user.name;
+    const result = await res.json();
+    console.log("Server response:", result);
+
+    if (result.success || result.msg) {
+      alert(`✅ Job Posted Successfully!\n\n📝 Title: ${data.title}\n💰 Budget: ₹${data.budget.toLocaleString('en-IN')}\n\nYou'll be notified when freelancers start applying!`);
+      window.location.href = "dashboard-employer.html";
+    } else {
+      throw new Error(result.error || "Failed to post job");
     }
-  </script>
+
+  } catch (error) {
+    console.error("Error posting job:", error);
+    alert("❌ Error posting job. Please try again.\n\n" + error.message);
+  } finally {
+    // Reset button state
+    submitBtn.disabled = false;
+    btnText.classList.remove('hidden');
+    btnLoader.classList.add('hidden');
+  }
+});
+
+// Auto-fill company name from user data
+if (user && user.name) {
+  document.getElementById('company').value = user.name;
+}
+</script>
 
 </body>
 </html>

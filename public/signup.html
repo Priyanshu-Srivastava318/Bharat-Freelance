@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up – Bharat Freelance</title>
-  <script src="config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { 
@@ -163,7 +162,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
 
     console.log("Signing up:", { name, email, role });
 
-    const res = await fetch(`${API_BASE_URL}/api/auth/signup`, { {
+    const res = await fetch("http://localhost:5000/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, role }),

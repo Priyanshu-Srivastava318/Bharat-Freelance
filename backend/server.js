@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
@@ -17,15 +18,21 @@ app.use(express.json());
 // Connect to MongoDB
 connectDB();
 
-// Use Routes
+// SERVE PUBLIC FOLDER (IMPORTANT FIX)
+app.use(express.static(path.join(__dirname, "..", "public")));
+
+// DEFAULT ROUTE → load about.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "about.html"));
+});
+
+// API ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/ats", atsRoutes);
 app.use("/api/pay", paymentRoutes);
-app.use("/api/ats", require("./routes/ats"));
 
-
-// Start Server
+// START SERVER
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
   console.log(`🔥 Backend live on http://localhost:${PORT}`)

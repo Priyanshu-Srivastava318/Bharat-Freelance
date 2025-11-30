@@ -3,11 +3,29 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login – Bharat Freelance</title>
-  <script src="config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { 
+      theme: { 
+        extend: { 
+          colors: { 
+            saffron: "#FF9933",
+            brand: "#1dbf73"
+          } 
+        } 
+      } 
+    }
+  </script>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
     .fade-in {
       animation: fadeIn 1.2s ease-in-out forwards;
       opacity: 0;
@@ -21,64 +39,156 @@
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-green-100 via-white to-blue-100 min-h-screen flex items-center justify-center fade-in">
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 min-h-screen flex items-center justify-center fade-in px-4">
 
-  <div class="bg-white shadow-2xl rounded-xl max-w-md w-full p-8 space-y-6">
-    <h2 class="text-center text-4xl font-extrabold text-green-700">Welcome Back</h2>
+  <div class="bg-white shadow-2xl rounded-2xl max-w-md w-full p-8 space-y-6">
+    
+    <!-- Logo -->
+    <div class="text-center mb-4">
+      <h1 class="text-3xl font-extrabold mb-2">
+        <span class="text-saffron">Bharat</span><span class="text-brand">Freelance</span>
+      </h1>
+      <h2 class="text-2xl font-bold text-gray-800">Welcome Back</h2>
+      <p class="text-gray-600 mt-2">Login to continue your journey</p>
+    </div>
 
     <form id="loginForm" class="space-y-5">
-      <input id="email" type="email" placeholder="✉️ Email" required
-        class="w-full p-3 border rounded-lg shadow focus:ring focus:ring-green-200" />
+      
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+        <input id="email" type="email" placeholder="your.email@example.com" required
+          class="w-full p-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand transition" />
+      </div>
 
-      <input id="password" type="password" placeholder="🔒 Password" required
-        class="w-full p-3 border rounded-lg shadow focus:ring focus:ring-green-200" />
+      <!-- Password -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+        <input id="password" type="password" placeholder="Enter your password" required
+          class="w-full p-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand transition" />
+      </div>
 
-      <button type="submit"
-        class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl shadow-md transition">
-        Login
+      <!-- Remember Me & Forgot Password -->
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center">
+          <input type="checkbox" class="w-4 h-4 text-brand border-gray-300 rounded focus:ring-brand">
+          <span class="ml-2 text-gray-600">Remember me</span>
+        </label>
+        <a href="#" class="text-brand hover:underline font-semibold">Forgot password?</a>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="submitBtn"
+        class="w-full bg-gradient-to-r from-saffron to-brand text-white py-3 rounded-xl shadow-md hover:shadow-xl transition font-bold text-lg flex items-center justify-center gap-2">
+        <span id="btnText">Login</span>
+        <div id="btnLoader" class="hidden">
+          <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+        </div>
       </button>
     </form>
 
+    <!-- Signup Link -->
     <p class="text-center text-gray-600">
       Not a member?
-      <a href="signup.html" class="text-green-600 font-semibold hover:underline">Create account</a>
+      <a href="signup.html" class="text-brand font-semibold hover:underline">Create account</a>
     </p>
+
+    <!-- Social Proof -->
+    <div class="pt-6 border-t border-gray-200">
+      <div class="flex justify-center gap-8 text-center text-xs text-gray-500">
+        <div>
+          <p class="font-bold text-brand text-lg">10K+</p>
+          <p>Active Users</p>
+        </div>
+        <div>
+          <p class="font-bold text-saffron text-lg">5K+</p>
+          <p>Projects</p>
+        </div>
+        <div>
+          <p class="font-bold text-brand text-lg">98%</p>
+          <p>Satisfaction</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
+    // API Configuration - Auto detects localhost vs production
+    const API_BASE_URL = (function() {
+      const hostname = window.location.hostname;
+      
+      if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://localhost:5000';
+      }
+      
+      return 'https://bharat-freelance-api.onrender.com';
+    })();
+
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+      e.preventDefault(); // ✅ PREVENTS PAGE REFRESH
 
- const res = await fetch(`${API_BASE_URL}/api/auth/login`, { {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnLoader = document.getElementById('btnLoader');
 
-  const data = await res.json();
-  console.log(data);
+      // Show loading state
+      submitBtn.disabled = true;
+      btnText.classList.add('hidden');
+      btnLoader.classList.remove('hidden');
 
-  // ✅ Check if token exists instead of success field
-  if (!data.token) {
-    return alert(data.message || "Invalid credentials ❌");
-  }
+      try {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
 
-  alert("🎉 Login Successful!");
+        console.log("Attempting login:", email);
+        console.log("API URL:", API_BASE_URL);
 
-  // SAVE TOKEN + USER
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("user", JSON.stringify(data.user));
+        const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
 
-  // ROLE BASED REDIRECT
-  if (data.user.role === "employer") {
-    window.location.href = "dashboard-employer.html";
-  } else {
-    window.location.href = "dashboard-freelancer.html";
-  }
-});
+        const data = await res.json();
+        console.log("Login response:", data);
+
+        // ✅ Check if token exists
+        if (!data.token) {
+          alert("❌ " + (data.message || data.msg || "Invalid credentials"));
+          return;
+        }
+
+        // Success!
+        alert(`🎉 Login Successful!\n\nWelcome back, ${data.user.name || 'User'}!`);
+
+        // SAVE TOKEN + USER
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // ✅ ROLE BASED REDIRECT
+        if (data.user.role === "employer") {
+          console.log("Redirecting to employer dashboard");
+          window.location.href = "dashboard-employer.html";
+        } else if (data.user.role === "freelancer") {
+          console.log("Redirecting to freelancer dashboard");
+          window.location.href = "dashboard-freelancer.html";
+        } else {
+          // Fallback
+          console.log("Unknown role, redirecting to freelancer dashboard");
+          window.location.href = "dashboard-freelancer.html";
+        }
+
+      } catch (error) {
+        console.error("Login error:", error);
+        alert("❌ Network error. Please check your connection and try again.");
+      } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        btnText.classList.remove('hidden');
+        btnLoader.classList.add('hidden');
+      }
+    });
   </script>
 </body>
 

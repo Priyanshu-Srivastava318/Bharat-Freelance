@@ -20,8 +20,9 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// ✅ GET ALL JOBS (Frontend uses this)
-router.get("/all", async (req, res) => {
+// ✅ GET ALL JOBS (Frontend dashboard-freelancer uses this)
+// FIXED: Changed from "/all" to "/" to match frontend call
+router.get("/", async (req, res) => {
   try {
     const jobs = await Job.find().sort({ createdAt: -1 });
     res.json(jobs);
@@ -30,24 +31,28 @@ router.get("/all", async (req, res) => {
   }
 });
 
+// ✅ GET EMPLOYER'S OWN JOBS
+// FIXED: Changed route to match frontend call pattern
+router.get("/:employerId", async (req, res) => {
+  try {
+    const jobs = await Job.find({ employerId: req.params.employerId }).sort({ createdAt: -1 });
+    res.json(jobs);
+  } catch (err) {
+    res.status(500).json({ msg: "Error: " + err.message });
+  }
+});
+
 // ✅ GET SINGLE JOB BY ID
-router.get("/:id", async (req, res) => {
+// IMPORTANT: This must come AFTER specific routes like "/create"
+// But since we now use /:employerId above, we need to differentiate
+// Solution: Use query params or specific route prefix
+router.get("/job/:id", async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
     if (!job) {
       return res.status(404).json({ msg: "Job not found" });
     }
     res.json(job);
-  } catch (err) {
-    res.status(500).json({ msg: "Error: " + err.message });
-  }
-});
-
-// ✅ GET EMPLOYER'S OWN JOBS
-router.get("/byEmployer/:id", async (req, res) => {
-  try {
-    const jobs = await Job.find({ employerId: req.params.id }).sort({ createdAt: -1 });
-    res.json(jobs);
   } catch (err) {
     res.status(500).json({ msg: "Error: " + err.message });
   }

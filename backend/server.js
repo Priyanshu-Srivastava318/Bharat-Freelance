@@ -18,21 +18,25 @@ app.use(express.json());
 // Connect to MongoDB
 connectDB();
 
-// SERVE PUBLIC FOLDER (IMPORTANT FIX)
-app.use(express.static(path.join(__dirname, "..", "public")));
+// =============================
+//  SERVE PUBLIC FRONTEND FILES
+// =============================
+app.use(express.static(path.join(__dirname, "../public")));
 
-// DEFAULT ROUTE → load about.html
+// Default route → automatically serve index / home  
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "about.html"));
+  res.sendFile(path.join(__dirname, "../public/about.html"));
 });
 
-// API ROUTES
+// =============================
+//        API ROUTES
+// =============================
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/ats", atsRoutes);
 app.use("/api/pay", paymentRoutes);
 
-// START SERVER
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
   console.log(`🔥 Backend live on http://localhost:${PORT}`)

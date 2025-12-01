@@ -22,9 +22,34 @@ router.post("/signup", async (req, res) => {
     });
 
     await newUser.save();
-    res.json({ msg: "Signup Success" });
+
+    // ✅ FIXED: Generate token and return user data immediately after signup
+    // This enables auto-login after signup
+    const token = jwt.sign(
+      { id: newUser._id, role: newUser.role }, 
+      process.env.JWT_SECRET || "fallback_secret_key_12345",
+      { expiresIn: "7d" }
+    );
+
+    // Return user without password
+    const userResponse = {
+      _id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role
+    };
+
+    res.json({ 
+      success: true,
+      msg: "Signup Success",
+      token,
+      user: userResponse
+    });
   } catch (err) {
-    res.status(500).json({ msg: "Error: " + err.message });
+    res.status(500).json({ 
+      success: false,
+      msg: "Error: " + err.message 
+    });
   }
 });
 
@@ -39,10 +64,32 @@ router.post("/login", async (req, res) => {
     const isPassCorrect = await bcrypt.compare(password, user.password);
     if (!isPassCorrect) return res.status(400).json({ msg: "⚠ Wrong password" });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
-    res.json({ msg: "Logged in successfully", token, user });
+    // ✅ FIXED: Added expiry and fallback secret
+    const token = jwt.sign(
+      { id: user._id, role: user.role }, 
+      process.env.JWT_SECRET || "fallback_secret_key_12345",
+      { expiresIn: "7d" }
+    );
+
+    // ✅ FIXED: Return user without password
+    const userResponse = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+
+    res.json({ 
+      success: true,
+      msg: "Logged in successfully", 
+      token, 
+      user: userResponse 
+    });
   } catch (err) {
-    res.status(500).json({ msg: "Error: " + err.message });
+    res.status(500).json({ 
+      success: false,
+      msg: "Error: " + err.message 
+    });
   }
 });
 

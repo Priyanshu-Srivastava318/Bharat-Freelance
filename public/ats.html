@@ -230,168 +230,175 @@
       </div>
     </div>
   </section>
+<script>
+  // ✅ API URL Configuration - Auto-detects environment
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000'
+  : 'https://bharat-freelance-api.onrender.com';
 
-  <script>
-  let uploadedFile = null;
-  const urlParams = new URLSearchParams(window.location.search);
-  const jobId = urlParams.get('job');
+console.log('🌐 Using API:', API_URL);
 
-  // Load job details
-  async function loadJobDetails() {
-    if(!jobId) {
-      alert("No job specified!");
+let uploadedFile = null;
+const urlParams = new URLSearchParams(window.location.search);
+const jobId = urlParams.get('job');
+
+// Load job details
+async function loadJobDetails() {
+  if(!jobId) {
+    alert("No job specified!");
+    window.location.href = "dashboard-freelancer.html";
+    return;
+  }
+
+  try {
+    // ✅ FIXED: Using API_URL with backticks
+    const res = await fetch(`${API_URL}/api/jobs/job/${jobId}`);
+    const job = await res.json();
+    
+    document.getElementById('jobTitle').textContent = job.title;
+    document.getElementById('jobCompany').textContent = job.company || 'Company Name';
+    document.getElementById('jobBudget').textContent = `₹${(job.budget || 0).toLocaleString('en-IN')}`;
+    document.getElementById('jobCategory').textContent = job.category || 'General';
+    
+    if(job.skills && job.skills.length > 0) {
+      const skillsHTML = job.skills.slice(0, 3).map(skill => 
+        `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">${skill}</span>`
+      ).join('');
+      document.getElementById('jobSkills').innerHTML = skillsHTML;
+    }
+  } catch(error) {
+    console.error("Error loading job:", error);
+  }
+}
+
+// File upload handling
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('resume');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+
+uploadArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadArea.classList.add('drag-over');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+  uploadArea.classList.remove('drag-over');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag-over');
+  
+  const files = e.dataTransfer.files;
+  if(files.length > 0) {
+    fileInput.files = files;
+    handleFileSelect(files[0]);
+  }
+});
+
+fileInput.addEventListener('change', (e) => {
+  if(e.target.files.length > 0) {
+    handleFileSelect(e.target.files[0]);
+  }
+});
+
+function handleFileSelect(file) {
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  
+  if(file.size > maxSize) {
+    alert('File too large! Maximum size is 5MB');
+    return;
+  }
+
+  const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if(!validTypes.includes(file.type)) {
+    alert('Invalid file type! Please upload PDF, DOC, or DOCX');
+    return;
+  }
+
+  uploadedFile = file;
+  
+  document.getElementById('uploadPrompt').classList.add('hidden');
+  document.getElementById('fileInfo').classList.remove('hidden');
+  uploadArea.classList.add('file-uploaded');
+  
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSize').textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
+}
+
+function removeFile() {
+  uploadedFile = null;
+  fileInput.value = '';
+  
+  document.getElementById('uploadPrompt').classList.remove('hidden');
+  document.getElementById('fileInfo').classList.add('hidden');
+  uploadArea.classList.remove('file-uploaded');
+}
+
+// Form submission
+document.getElementById("applyForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if(!uploadedFile) {
+    alert("Please upload your resume!");
+    return;
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const btnLoader = document.getElementById('btnLoader');
+
+  // Show loading state
+  submitBtn.disabled = true;
+  btnText.classList.add('hidden');
+  btnLoader.classList.remove('hidden');
+
+  try {
+    const formData = new FormData();
+    formData.append("resume", uploadedFile);
+    formData.append("jobId", jobId);
+    formData.append("name", document.getElementById('name').value);
+    formData.append("email", document.getElementById('email').value);
+    formData.append("phone", document.getElementById('phone').value);
+    formData.append("coverLetter", document.getElementById('coverLetter').value);
+
+    // ✅ FIXED: Using API_URL with backticks
+    const res = await fetch(`${API_URL}/api/ats/`, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+    
+    // Show results
+    if(data.score) {
+      alert(`🎉 Application Submitted!\n\n📊 ATS Score: ${data.score}/100\n💬 Feedback: ${data.feedback}\n\nWe'll notify you when the employer reviews your application!`);
       window.location.href = "dashboard-freelancer.html";
-      return;
+    } else {
+      alert(data.msg || data.message || "Application submitted successfully!");
     }
 
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`);
-      const job = await res.json();
-      
-      document.getElementById('jobTitle').textContent = job.title;
-      document.getElementById('jobCompany').textContent = job.company || 'Company Name';
-      document.getElementById('jobBudget').textContent = `₹${(job.budget || 0).toLocaleString('en-IN')}`;
-      document.getElementById('jobCategory').textContent = job.category || 'General';
-      
-      if(job.skills && job.skills.length > 0) {
-        const skillsHTML = job.skills.slice(0, 3).map(skill => 
-          `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">${skill}</span>`
-        ).join('');
-        document.getElementById('jobSkills').innerHTML = skillsHTML;
-      }
-    } catch(error) {
-      console.error("Error loading job:", error);
-    }
+  } catch(error) {
+    console.error("Error:", error);
+    alert("❌ Error submitting application. Please try again.");
+  } finally {
+    // Reset button state
+    submitBtn.disabled = false;
+    btnText.classList.remove('hidden');
+    btnLoader.classList.add('hidden');
   }
+});
 
-  // File upload handling
-  const uploadArea = document.getElementById('uploadArea');
-  const fileInput = document.getElementById('resume');
+// Initialize
+loadJobDetails();
 
-  uploadArea.addEventListener('click', () => fileInput.click());
-
-  uploadArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadArea.classList.add('drag-over');
-  });
-
-  uploadArea.addEventListener('dragleave', () => {
-    uploadArea.classList.remove('drag-over');
-  });
-
-  uploadArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.classList.remove('drag-over');
-    
-    const files = e.dataTransfer.files;
-    if(files.length > 0) {
-      fileInput.files = files;
-      handleFileSelect(files[0]);
-    }
-  });
-
-  fileInput.addEventListener('change', (e) => {
-    if(e.target.files.length > 0) {
-      handleFileSelect(e.target.files[0]);
-    }
-  });
-
-  function handleFileSelect(file) {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    
-    if(file.size > maxSize) {
-      alert('File too large! Maximum size is 5MB');
-      return;
-    }
-
-    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if(!validTypes.includes(file.type)) {
-      alert('Invalid file type! Please upload PDF, DOC, or DOCX');
-      return;
-    }
-
-    uploadedFile = file;
-    
-    document.getElementById('uploadPrompt').classList.add('hidden');
-    document.getElementById('fileInfo').classList.remove('hidden');
-    uploadArea.classList.add('file-uploaded');
-    
-    document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileSize').textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
-  }
-
-  function removeFile() {
-    uploadedFile = null;
-    fileInput.value = '';
-    
-    document.getElementById('uploadPrompt').classList.remove('hidden');
-    document.getElementById('fileInfo').classList.add('hidden');
-    uploadArea.classList.remove('file-uploaded');
-  }
-
-  // Form submission
-  document.getElementById("applyForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if(!uploadedFile) {
-      alert("Please upload your resume!");
-      return;
-    }
-
-    const submitBtn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    const btnLoader = document.getElementById('btnLoader');
-
-    // Show loading state
-    submitBtn.disabled = true;
-    btnText.classList.add('hidden');
-    btnLoader.classList.remove('hidden');
-
-    try {
-      const formData = new FormData();
-      formData.append("resume", uploadedFile);
-      formData.append("jobId", jobId);
-      formData.append("name", document.getElementById('name').value);
-      formData.append("email", document.getElementById('email').value);
-      formData.append("phone", document.getElementById('phone').value);
-      formData.append("coverLetter", document.getElementById('coverLetter').value);
-
-      const res = await fetch("${API_BASE_URL}/api/ats/", {
-        method: "POST",
-        body: formData
-      });
-
-      const data = await res.json();
-      
-      // Show results
-      if(data.score) {
-        alert(`🎉 Application Submitted!\n\n📊 ATS Score: ${data.score}/100\n💬 Feedback: ${data.feedback}\n\nWe'll notify you when the employer reviews your application!`);
-        window.location.href = "dashboard-freelancer.html";
-      } else {
-        alert(data.msg || data.message || "Application submitted successfully!");
-      }
-
-    } catch(error) {
-      console.error("Error:", error);
-      alert("❌ Error submitting application. Please try again.");
-    } finally {
-      // Reset button state
-      submitBtn.disabled = false;
-      btnText.classList.remove('hidden');
-      btnLoader.classList.add('hidden');
-    }
-  });
-
-  // Initialize
-  loadJobDetails();
-
-  // Auto-fill user info if logged in
-  const user = JSON.parse(localStorage.getItem("user"));
-  if(user) {
-    document.getElementById('name').value = user.name || '';
-    document.getElementById('email').value = user.email || '';
-  }
-  </script>
-
+// Auto-fill user info if logged in
+const user = JSON.parse(localStorage.getItem("user"));
+if(user) {
+  document.getElementById('name').value = user.name || '';
+  document.getElementById('email').value = user.email || '';
+}
+</script>
 </body>
 </html>

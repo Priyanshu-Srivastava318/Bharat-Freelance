@@ -114,16 +114,12 @@
   </div>
 
   <script>
-    // API Configuration - Auto detects localhost vs production
-    const API_BASE_URL = (function() {
-      const hostname = window.location.hostname;
-      
-      if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return 'http://localhost:5000';
-      }
-      
-      return 'https://bharat-freelance-api.onrender.com';
-    })();
+    // ✅ API URL Configuration - Auto-detects environment
+    const API_URL = window.location.hostname === 'localhost' 
+      ? 'http://localhost:5000'
+      : 'https://bharat-freelance-api.onrender.com';
+
+    console.log('🌐 Using API:', API_URL);
 
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault(); // ✅ PREVENTS PAGE REFRESH
@@ -142,9 +138,9 @@
         const password = document.getElementById('password').value;
 
         console.log("Attempting login:", email);
-        console.log("API URL:", API_BASE_URL);
 
-        const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        // ✅ FIXED: Using dynamic API_URL instead of hardcoded localhost
+        const res = await fetch(`${API_URL}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password })

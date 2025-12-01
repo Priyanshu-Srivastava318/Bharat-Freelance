@@ -210,231 +210,237 @@
     </div>
 
   </div>
+<script>
+ // ✅ API URL Configuration - Auto-detects environment
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000'
+  : 'https://bharat-freelance-api.onrender.com';
 
-  <script>
-  let allJobs = [];
+console.log('🌐 Using API:', API_URL);
 
-  // Load user info
-  function loadUserInfo() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if(user) {
-      document.getElementById("userName").textContent = user.name || "Welcome!";
-      document.getElementById("userEmail").textContent = user.email || "";
-    }
+let allJobs = [];
+
+// Load user info
+function loadUserInfo() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if(user) {
+    document.getElementById("userName").textContent = user.name || "Welcome!";
+    document.getElementById("userEmail").textContent = user.email || "";
   }
+}
 
-  // Load jobs
-  async function loadJobs() {
-    try {
-      const loadingState = document.getElementById("loadingState");
-      const jobList = document.getElementById("jobList");
-      const emptyState = document.getElementById("emptyState");
-
-      loadingState.style.display = "block";
-      jobList.innerHTML = "";
-      emptyState.classList.add("hidden");
-
-      const res = await fetch("${API_BASE_URL}/api/jobs/");
-      const jobs = await res.json();
-      
-      allJobs = jobs;
-      
-      loadingState.style.display = "none";
-
-      if(jobs.length === 0) {
-        emptyState.classList.remove("hidden");
-        return;
-      }
-
-      // Update stats
-      document.getElementById("totalJobs").textContent = jobs.length;
-      
-      let totalBudget = 0;
-      jobs.forEach(job => {
-        totalBudget += job.budget || 0;
-      });
-      document.getElementById("potentialEarnings").textContent = `₹${totalBudget.toLocaleString('en-IN')}`;
-
-      displayJobs(jobs);
-
-    } catch(error) {
-      console.error("Error loading jobs:", error);
-      document.getElementById("loadingState").style.display = "none";
-      alert("❌ Error loading jobs. Please try again.");
-    }
-  }
-
-  // Display jobs
-  function displayJobs(jobs) {
-    const container = document.getElementById("jobList");
+// Load jobs
+async function loadJobs() {
+  try {
+    const loadingState = document.getElementById("loadingState");
+    const jobList = document.getElementById("jobList");
     const emptyState = document.getElementById("emptyState");
+
+    loadingState.style.display = "block";
+    jobList.innerHTML = "";
+    emptyState.classList.add("hidden");
+
+    // ✅ FIXED: Using API_URL instead of ${API_BASE_URL}
+    const res = await fetch(`${API_URL}/api/jobs/`);
+    const jobs = await res.json();
     
-    container.innerHTML = "";
+    allJobs = jobs;
+    
+    loadingState.style.display = "none";
 
     if(jobs.length === 0) {
       emptyState.classList.remove("hidden");
       return;
     }
 
-    emptyState.classList.add("hidden");
+    // Update stats
+    document.getElementById("totalJobs").textContent = jobs.length;
+    
+    let totalBudget = 0;
+    jobs.forEach(job => {
+      totalBudget += job.budget || 0;
+    });
+    document.getElementById("potentialEarnings").textContent = `₹${totalBudget.toLocaleString('en-IN')}`;
 
-    jobs.forEach((job, index) => {
-      const categoryColors = {
-        'Web Development': 'bg-blue-100 text-blue-700',
-        'Graphic Design': 'bg-purple-100 text-purple-700',
-        'Content Writing': 'bg-green-100 text-green-700',
-        'Video Editing': 'bg-red-100 text-red-700',
-        'Digital Marketing': 'bg-yellow-100 text-yellow-700',
-        'Mobile Apps': 'bg-indigo-100 text-indigo-700'
-      };
+    displayJobs(jobs);
 
-      const categoryColor = categoryColors[job.category] || 'bg-gray-100 text-gray-700';
-      
-      container.innerHTML += `
-        <div class="job-card bg-white p-6 rounded-2xl shadow-lg" style="animation-delay: ${index * 0.1}s;">
+  } catch(error) {
+    console.error("Error loading jobs:", error);
+    document.getElementById("loadingState").style.display = "none";
+    alert("❌ Error loading jobs. Please try again.");
+  }
+}
+
+// Display jobs
+function displayJobs(jobs) {
+  const container = document.getElementById("jobList");
+  const emptyState = document.getElementById("emptyState");
+  
+  container.innerHTML = "";
+
+  if(jobs.length === 0) {
+    emptyState.classList.remove("hidden");
+    return;
+  }
+
+  emptyState.classList.add("hidden");
+
+  jobs.forEach((job, index) => {
+    const categoryColors = {
+      'Web Development': 'bg-blue-100 text-blue-700',
+      'Graphic Design': 'bg-purple-100 text-purple-700',
+      'Content Writing': 'bg-green-100 text-green-700',
+      'Video Editing': 'bg-red-100 text-red-700',
+      'Digital Marketing': 'bg-yellow-100 text-yellow-700',
+      'Mobile Apps': 'bg-indigo-100 text-indigo-700'
+    };
+
+    const categoryColor = categoryColors[job.category] || 'bg-gray-100 text-gray-700';
+    
+    container.innerHTML += `
+      <div class="job-card bg-white p-6 rounded-2xl shadow-lg" style="animation-delay: ${index * 0.1}s;">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2 flex-wrap">
+              <h3 class="text-2xl font-bold text-gray-800">${job.title}</h3>
+              <span class="text-xs ${categoryColor} px-3 py-1 rounded-full font-semibold">${job.category || 'General'}</span>
+              <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold flex items-center gap-1">
+                <span>🟢</span> Active
+              </span>
+            </div>
+            <p class="text-gray-600 mb-3">${job.description}</p>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 py-4 border-y border-gray-100">
           
-          <!-- Header -->
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-2 flex-wrap">
-                <h3 class="text-2xl font-bold text-gray-800">${job.title}</h3>
-                <span class="text-xs ${categoryColor} px-3 py-1 rounded-full font-semibold">${job.category || 'General'}</span>
-                <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold flex items-center gap-1">
-                  <span>🟢</span> Active
-                </span>
-              </div>
-              <p class="text-gray-600 mb-3">${job.description}</p>
-            </div>
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Budget</p>
+            <p class="font-bold text-brand text-xl">₹${(job.budget || 0).toLocaleString('en-IN')}</p>
           </div>
 
-          <!-- Details Grid -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 py-4 border-y border-gray-100">
-            
-            <div>
-              <p class="text-xs text-gray-500 mb-1">Budget</p>
-              <p class="font-bold text-brand text-xl">₹${(job.budget || 0).toLocaleString('en-IN')}</p>
-            </div>
-
-            <div>
-              <p class="text-xs text-gray-500 mb-1">Duration</p>
-              <p class="font-semibold text-gray-700">${job.duration || 'Flexible'}</p>
-            </div>
-
-            <div>
-              <p class="text-xs text-gray-500 mb-1">Posted</p>
-              <p class="font-semibold text-gray-700">${getTimeAgo(job.createdAt)}</p>
-            </div>
-
-            <div>
-              <p class="text-xs text-gray-500 mb-1">Proposals</p>
-              <p class="font-bold text-saffron text-xl">${job.applicants || 0}</p>
-            </div>
-
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Duration</p>
+            <p class="font-semibold text-gray-700">${job.duration || 'Flexible'}</p>
           </div>
 
-          <!-- Skills -->
-          ${job.skills && job.skills.length > 0 ? `
-            <div class="mb-4">
-              <p class="text-xs text-gray-500 mb-2">Required Skills:</p>
-              <div class="flex flex-wrap gap-2">
-                ${job.skills.map(skill => `
-                  <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">${skill}</span>
-                `).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          <!-- Company Info -->
-          <div class="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
-            <div class="w-12 h-12 bg-gradient-to-br from-saffron to-brand rounded-full flex items-center justify-center text-white font-bold text-xl">
-              ${(job.company || 'C')[0].toUpperCase()}
-            </div>
-            <div>
-              <p class="font-semibold text-gray-800">${job.company || 'Company Name'}</p>
-              <p class="text-xs text-gray-500">Posted by ${job.employerName || 'Employer'}</p>
-            </div>
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Posted</p>
+            <p class="font-semibold text-gray-700">${getTimeAgo(job.createdAt)}</p>
           </div>
 
-          <!-- Actions -->
-          <div class="flex gap-3">
-            <button onclick="apply('${job._id}')" 
-              class="flex-1 bg-gradient-to-r from-saffron to-brand text-white px-6 py-3 rounded-xl hover:shadow-2xl transition font-bold flex items-center justify-center gap-2">
-              <span>📄</span> Apply with Resume
-            </button>
-            
-            <button onclick="viewDetails('${job._id}')" 
-              class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl transition font-semibold">
-              View Details
-            </button>
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Proposals</p>
+            <p class="font-bold text-saffron text-xl">${job.applicants || 0}</p>
           </div>
 
         </div>
-      `;
-    });
-  }
 
-  // Filter jobs
-  function filterJobs() {
-    const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-    const category = document.getElementById("categoryFilter").value;
-    const budget = document.getElementById("budgetFilter").value;
+        <!-- Skills -->
+        ${job.skills && job.skills.length > 0 ? `
+          <div class="mb-4">
+            <p class="text-xs text-gray-500 mb-2">Required Skills:</p>
+            <div class="flex flex-wrap gap-2">
+              ${job.skills.map(skill => `
+                <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">${skill}</span>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
 
-    let filtered = allJobs.filter(job => {
-      const matchesSearch = job.title.toLowerCase().includes(searchTerm) || 
-                           job.description.toLowerCase().includes(searchTerm) ||
-                           (job.skills && job.skills.some(s => s.toLowerCase().includes(searchTerm)));
-      
-      const matchesCategory = !category || job.category === category;
-      
-      let matchesBudget = true;
-      if(budget) {
-        const [min, max] = budget.split('-').map(Number);
-        matchesBudget = job.budget >= min && job.budget <= (max || Infinity);
-      }
+        <!-- Company Info -->
+        <div class="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
+          <div class="w-12 h-12 bg-gradient-to-br from-saffron to-brand rounded-full flex items-center justify-center text-white font-bold text-xl">
+            ${(job.company || 'C')[0].toUpperCase()}
+          </div>
+          <div>
+            <p class="font-semibold text-gray-800">${job.company || 'Company Name'}</p>
+            <p class="text-xs text-gray-500">Posted by ${job.employerName || 'Employer'}</p>
+          </div>
+        </div>
 
-      return matchesSearch && matchesCategory && matchesBudget;
-    });
+        <!-- Actions -->
+        <div class="flex gap-3">
+          <button onclick="apply('${job._id}')" 
+            class="flex-1 bg-gradient-to-r from-saffron to-brand text-white px-6 py-3 rounded-xl hover:shadow-2xl transition font-bold flex items-center justify-center gap-2">
+            <span>📄</span> Apply with Resume
+          </button>
+          
+          <button onclick="viewDetails('${job._id}')" 
+            class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl transition font-semibold">
+            View Details
+          </button>
+        </div>
 
-    displayJobs(filtered);
-  }
+      </div>
+    `;
+  });
+}
 
-  // Helper: Time ago
-  function getTimeAgo(dateString) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((now - date) / 1000);
+// Filter jobs
+function filterJobs() {
+  const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+  const category = document.getElementById("categoryFilter").value;
+  const budget = document.getElementById("budgetFilter").value;
+
+  let filtered = allJobs.filter(job => {
+    const matchesSearch = job.title.toLowerCase().includes(searchTerm) || 
+                         job.description.toLowerCase().includes(searchTerm) ||
+                         (job.skills && job.skills.some(s => s.toLowerCase().includes(searchTerm)));
     
-    if(seconds < 60) return 'Just now';
-    if(seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    if(seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-    if(seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
-    return date.toLocaleDateString('en-IN');
-  }
-
-  function apply(jobId) {
-    location.href = `ats.html?job=${jobId}`;
-  }
-
-  function viewDetails(jobId) {
-    alert("Job details page coming soon!");
-  }
-
-  function scrollToJobs() {
-    document.getElementById("jobList").scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function logout() {
-    if(confirm("Are you sure you want to logout?")) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      location.href = "login.html";
+    const matchesCategory = !category || job.category === category;
+    
+    let matchesBudget = true;
+    if(budget) {
+      const [min, max] = budget.split('-').map(Number);
+      matchesBudget = job.budget >= min && job.budget <= (max || Infinity);
     }
+
+    return matchesSearch && matchesCategory && matchesBudget;
+  });
+
+  displayJobs(filtered);
+}
+
+// Helper: Time ago
+function getTimeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now - date) / 1000);
+  
+  if(seconds < 60) return 'Just now';
+  if(seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  if(seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+  if(seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+  return date.toLocaleDateString('en-IN');
+}
+
+function apply(jobId) {
+  location.href = `ats.html?job=${jobId}`;
+}
+
+function viewDetails(jobId) {
+  alert("Job details page coming soon!");
+}
+
+function scrollToJobs() {
+  document.getElementById("jobList").scrollIntoView({ behavior: 'smooth' });
+}
+
+function logout() {
+  if(confirm("Are you sure you want to logout?")) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    location.href = "login.html";
   }
+}
 
-  // Initialize
-  loadUserInfo();
-  loadJobs();
-  </script>
-
+// Initialize
+loadUserInfo();
+loadJobs(); 
+</script>
 </body>
 </html>

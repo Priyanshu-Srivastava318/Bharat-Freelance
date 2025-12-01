@@ -131,6 +131,13 @@
   </div>
 
 <script>
+// ✅ API URL Configuration - Auto-detects environment
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000'
+  : 'https://bharat-freelance-api.onrender.com';
+
+console.log('🌐 Using API:', API_URL);
+
 document.getElementById("signupForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -162,7 +169,8 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
 
     console.log("Signing up:", { name, email, role });
 
-    const res = await fetch("http://localhost:5000/api/auth/signup", {
+    // ✅ FIXED: Using dynamic API_URL instead of hardcoded localhost
+    const res = await fetch(`${API_URL}/api/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, role }),

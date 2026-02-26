@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; color-scheme: light; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F8F7F4;
+    color: #1a1a1a;
+    overflow-x: hidden;
+  }
+  h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+}
+
+@layer components {
+  .editorial-line {
+    display: block;
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, #FF9933, #1dbf73);
+  }
+
+  /* Card with light shadow */
+  .card {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.07);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    border-radius: 16px;
+  }
+
+  /* Input field */
+  .field {
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .field:focus { border-color: #1dbf73; }
+  .field::placeholder { color: #c0c0c0; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #F8F7F4; }
+  ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #1dbf73; }
+}

@@ -11,6 +11,9 @@ import ApplyJob from './pages/ApplyJob';
 import AtsResult from './pages/AtsResult';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import ForgotPassword from './pages/ForgotPassword';
+import Profile from './pages/Profile';
+import AdminDashboard from './pages/AdminDashboard';
 
 const Spinner = () => (
   <div className="min-h-screen bg-[#F8F7F4] flex items-center justify-center">
@@ -35,6 +38,9 @@ const AppRoutes = () => {
       <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/profile/:userId" element={<Profile />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/dashboard/freelancer" element={<ProtectedRoute role="freelancer"><DashboardFreelancer /></ProtectedRoute>} />
       <Route path="/dashboard/employer" element={<ProtectedRoute role="employer"><DashboardEmployer /></ProtectedRoute>} />
       <Route path="/post-job" element={<ProtectedRoute role="employer"><PostJob /></ProtectedRoute>} />

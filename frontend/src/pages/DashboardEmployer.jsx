@@ -110,8 +110,12 @@ export default function DashboardEmployer() {
                   <div className="flex lg:flex-col gap-2 lg:min-w-[150px]">
                     <button onClick={() => setSelectedJob(job)}
                       className="flex-1 lg:flex-none text-sm font-body font-semibold bg-blue-50 text-blue-600 border border-blue-100 px-4 py-2.5 rounded-xl hover:bg-blue-100 transition-colors text-center">
-                      👥 View Applicants ({job.applicants||0})
+                      👥 Applicants ({job.applicants||0})
                     </button>
+                    <a href="https://rzp.io/rzp/V7yWJ05B" target="_blank" rel="noopener noreferrer"
+                      className="flex-1 lg:flex-none text-sm font-body font-semibold bg-gradient-to-r from-[#FF9933] to-[#1dbf73] text-white px-4 py-2.5 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-center">
+                      💳 Pay Freelancer
+                    </a>
                     <button onClick={() => handleDelete(job._id)}
                       className="px-4 py-2.5 rounded-xl font-body text-sm text-red-400 border border-red-100 hover:bg-red-50 transition-colors">
                       🗑️ Delete

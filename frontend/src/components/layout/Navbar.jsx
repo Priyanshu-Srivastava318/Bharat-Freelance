@@ -84,11 +84,11 @@ export default function Navbar() {
             ) : (
               <>
                 <Link to="/login"
-                  className="text-sm font-medium text-[#555] hover:text-[#1a1a1a] border border-[#e0e0e0] hover:border-[#bbb] px-5 py-2 rounded-lg transition-all">
+                  className="text-sm font-semibold text-[#555] hover:text-[#1a1a1a] border border-[#ddd] hover:border-[#aaa] px-4 py-2.5 rounded-xl transition-all">
                   Login
                 </Link>
                 <Link to="/signup"
-                  className="text-sm font-semibold bg-gradient-to-r from-[#FF9933] to-[#1dbf73] text-white px-5 py-2.5 rounded-lg shadow-md shadow-[#1dbf73]/20 hover:shadow-lg hover:shadow-[#1dbf73]/30 transition-all hover:-translate-y-0.5">
+                  className="text-sm font-semibold bg-gradient-to-r from-[#FF9933] to-[#1dbf73] text-white px-4 py-2.5 rounded-xl shadow-md shadow-[#FF9933]/20 hover:shadow-lg transition-all hover:-translate-y-0.5">
                   Sign Up
                 </Link>
               </>

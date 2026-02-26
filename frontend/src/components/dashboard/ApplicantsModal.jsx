@@ -87,6 +87,12 @@ export default function ApplicantsModal({ job, onClose }) {
                           className="field !py-1.5 !text-xs !rounded-lg">
                           {['pending','reviewed','shortlisted','rejected','hired'].map(s => <option key={s} value={s} className="capitalize">{s}</option>)}
                         </select>
+                        {app.status === 'hired' && (
+                          <a href="https://rzp.io/rzp/V7yWJ05B" target="_blank" rel="noopener noreferrer"
+                            className="text-xs font-body font-semibold bg-gradient-to-r from-[#FF9933] to-[#1dbf73] text-white px-3 py-2 rounded-xl text-center shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                            💳 Pay Now
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>

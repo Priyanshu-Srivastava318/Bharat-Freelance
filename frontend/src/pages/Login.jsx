@@ -74,7 +74,10 @@ export default function Login() {
                 placeholder="your@email.com" required className="field" />
             </div>
             <div>
-              <label className="block text-[11px] font-mono text-[#aaa] tracking-widest uppercase mb-2">Password</label>
+              <div className="flex justify-between items-center mb-2">
+              <label className="block text-[11px] font-mono text-[#aaa] tracking-widest uppercase">Password</label>
+              <Link to="/forgot-password" className="text-xs font-body text-[#1dbf73] hover:text-[#15a85f] transition-colors">Forgot password?</Link>
+            </div>
               <input type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})}
                 placeholder="••••••••" required className="field" />
             </div>

@@ -20,13 +20,7 @@ const getModels = () => {
   const User = require("../models/User");
   const Job  = require("../models/Job");
 
-  // Handle different possible model file names for ATS/Application
-  let Application;
-  const possibleNames = ["Application", "AtsResult", "Ats", "ATSApplication", "Resume"];
-  for (const name of possibleNames) {
-    try { Application = require(`../models/${name}`); break; } catch (_) {}
-  }
-  if (!Application) throw new Error("❌ No Application model found! Check models/ folder.");
+  const Application = require("../models/Applicant");
 
   return { User, Job, Application };
 };

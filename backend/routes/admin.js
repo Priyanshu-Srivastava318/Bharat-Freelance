@@ -1,72 +1,135 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
-const Job = require("../models/Job");
-const Applicant = require("../models/Applicant");
 
-// Simple admin auth middleware
-const adminAuth = (req, res, next) => {
+// ── Middleware: verify admin key ──────────────────────────────────────────────
+const ADMIN_KEY = process.env.ADMIN_KEY || "bharat_admin_secret_2025";
+
+function adminAuth(req, res, next) {
   const key = req.headers["x-admin-key"];
-  if (key !== process.env.ADMIN_KEY) return res.status(403).json({ error: "Unauthorized" });
+  if (!key || key !== ADMIN_KEY) {
+    return res.status(401).json({ error: "Unauthorized: Invalid admin key" });
+  }
   next();
+}
+
+// Apply auth middleware to all admin routes
+router.use(adminAuth);
+
+// ── Lazy-load models (avoids circular dep issues) ─────────────────────────────
+const getModels = () => {
+  const User = require("../models/User");
+  const Job  = require("../models/Job");
+
+  // Handle different possible model file names for ATS/Application
+  let Application;
+  const possibleNames = ["Application", "AtsResult", "Ats", "ATSApplication", "Resume"];
+  for (const name of possibleNames) {
+    try { Application = require(`../models/${name}`); break; } catch (_) {}
+  }
+  if (!Application) throw new Error("❌ No Application model found! Check models/ folder.");
+
+  return { User, Job, Application };
 };
 
-// ── STATS ────────────────────────────────────────────────────
-router.get("/stats", adminAuth, async (req, res) => {
+// ── GET /api/admin/stats ──────────────────────────────────────────────────────
+router.get("/stats", async (req, res) => {
   try {
-    const [totalUsers, totalJobs, totalApplicants, employers, freelancers] = await Promise.all([
+    const { User, Job, Application } = getModels();
+
+    const [
+      totalUsers,
+      freelancers,
+      employers,
+      totalJobs,
+      totalApplicants,
+      hiredCount,
+      recentJobs,
+    ] = await Promise.all([
       User.countDocuments(),
-      Job.countDocuments(),
-      Applicant.countDocuments(),
-      User.countDocuments({ role: "employer" }),
       User.countDocuments({ role: "freelancer" }),
+      User.countDocuments({ role: "employer" }),
+      Job.countDocuments(),
+      Application.countDocuments(),
+      Application.countDocuments({ status: "hired" }),
+      Job.find().sort({ createdAt: -1 }).limit(5).select("title category budget createdAt"),
     ]);
-    const hiredCount = await Applicant.countDocuments({ status: "hired" });
-    const recentJobs = await Job.find().sort({ createdAt: -1 }).limit(5);
-    res.json({ totalUsers, totalJobs, totalApplicants, employers, freelancers, hiredCount, recentJobs });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+
+    res.json({ totalUsers, freelancers, employers, totalJobs, totalApplicants, hiredCount, recentJobs });
+  } catch (err) {
+    console.error("Admin stats error:", err);
+    res.status(500).json({ error: "Failed to fetch stats" });
+  }
 });
 
-// ── ALL USERS ────────────────────────────────────────────────
-router.get("/users", adminAuth, async (req, res) => {
+// ── GET /api/admin/users ──────────────────────────────────────────────────────
+router.get("/users", async (req, res) => {
   try {
-    const users = await User.find({}, "-password").sort({ createdAt: -1 });
+    const { User } = getModels();
+    const users = await User.find()
+      .select("-password")
+      .sort({ createdAt: -1 })
+      .limit(500);
     res.json(users);
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error("Admin users error:", err);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
 });
 
-// ── DELETE USER ──────────────────────────────────────────────
-router.delete("/users/:id", adminAuth, async (req, res) => {
+// ── DELETE /api/admin/users/:id ───────────────────────────────────────────────
+router.delete("/users/:id", async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+    const { User, Application } = getModels();
+    const user = await User.findByIdAndDelete(req.params.id);
+    // Cascade: delete their applications too
+    if (user?.email) await Application.deleteMany({ email: user.email });
+    res.json({ success: true, msg: "User deleted" });
+  } catch (err) {
+    console.error("Admin delete user error:", err);
+    res.status(500).json({ error: "Failed to delete user" });
+  }
 });
 
-// ── ALL JOBS ─────────────────────────────────────────────────
-router.get("/jobs", adminAuth, async (req, res) => {
+// ── GET /api/admin/jobs ───────────────────────────────────────────────────────
+router.get("/jobs", async (req, res) => {
   try {
-    const jobs = await Job.find().sort({ createdAt: -1 });
+    const { Job } = getModels();
+    const jobs = await Job.find()
+      .sort({ createdAt: -1 })
+      .limit(500);
     res.json(jobs);
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error("Admin jobs error:", err);
+    res.status(500).json({ error: "Failed to fetch jobs" });
+  }
 });
 
-// ── DELETE JOB ───────────────────────────────────────────────
-router.delete("/jobs/:id", adminAuth, async (req, res) => {
+// ── DELETE /api/admin/jobs/:id ────────────────────────────────────────────────
+router.delete("/jobs/:id", async (req, res) => {
   try {
+    const { Job, Application } = getModels();
     await Job.findByIdAndDelete(req.params.id);
-    await Applicant.deleteMany({ jobId: req.params.id });
-    res.json({ success: true });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+    await Application.deleteMany({ jobId: req.params.id });
+    res.json({ success: true, msg: "Job and its applications deleted" });
+  } catch (err) {
+    console.error("Admin delete job error:", err);
+    res.status(500).json({ error: "Failed to delete job" });
+  }
 });
 
-// ── ALL APPLICATIONS ─────────────────────────────────────────
-router.get("/applications", adminAuth, async (req, res) => {
+// ── GET /api/admin/applications ───────────────────────────────────────────────
+router.get("/applications", async (req, res) => {
   try {
-    const apps = await Applicant.find().sort({ appliedAt: -1 })
-      .populate("jobId", "title budget");
+    const { Application } = getModels();
+    const apps = await Application.find()
+      .populate("jobId", "title budget category")
+      .sort({ appliedAt: -1 })
+      .limit(500);
     res.json(apps);
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error("Admin applications error:", err);
+    res.status(500).json({ error: "Failed to fetch applications" });
+  }
 });
 
 module.exports = router;

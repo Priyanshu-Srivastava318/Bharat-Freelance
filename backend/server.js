@@ -47,7 +47,25 @@ app.get("/", (req, res) => {
   res.json({ msg: "Bharat Freelance API - Backend Running 🚀" });
 });
 
+// ── Render keep-alive: ping self every 14 min to prevent cold starts ──────────
+// Render free tier sleeps after 15 min of inactivity — this keeps it warm
+const SELF_URL =
+  process.env.RENDER_EXTERNAL_URL || `http://localhost:${process.env.PORT || 5000}`;
+
+function startKeepAlive() {
+  setInterval(async () => {
+    try {
+      const res = await fetch(`${SELF_URL}/api/health`);
+      const data = await res.json();
+      console.log(`🏓 Keep-alive ping OK [${new Date().toLocaleTimeString("en-IN")}] →`, data.status);
+    } catch (err) {
+      console.warn("⚠️  Keep-alive ping failed:", err.message);
+    }
+  }, 14 * 60 * 1000); // every 14 minutes
+}
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`🔥 Backend live on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`🔥 Backend live on http://localhost:${PORT}`);
+  startKeepAlive(); // 🏓 start the keep-alive loop
+});
